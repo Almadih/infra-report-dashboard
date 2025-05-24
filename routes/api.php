@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AnonymousAuthController;
 use App\Http\Controllers\DamageTypeController;
+use App\Http\Controllers\FCMTokenController;
 use App\Http\Controllers\SeverityController;
 use App\Http\Controllers\Users\MyReportsController;
 use App\Http\Controllers\Users\ReportController;
@@ -13,5 +14,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/my-reports', MyReportsController::class)->name('my-reports');
     Route::resource('damage-types', DamageTypeController::class)->only('index');
     Route::resource('severities', SeverityController::class)->only('index');
-
+    Route::post('/fcm-token', FCMTokenController::class)->name('fcm-token');
 });

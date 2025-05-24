@@ -4,9 +4,11 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use LaravelFCM\Traits\HasPushToken;
 
 /**
  * @property int $id
@@ -38,7 +40,7 @@ use Laravel\Sanctum\HasApiTokens;
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasApiTokens, HasFactory,Notifiable;
+    use HasApiTokens, HasFactory,HasPushToken,Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -74,5 +76,18 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function routeNotificationForFCM()
+    {
+        return $this->fcm_token; // column name where you stored the push token
+    }
+
+    /**
+     * Get all of the reports for the User
+     */
+    public function reports(): HasMany
+    {
+        return $this->hasMany(Report::class);
     }
 }

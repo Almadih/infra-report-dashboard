@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Report;
 use App\Models\Severity;
 use App\Models\Status;
+use App\Notifications\ReportStatusNotification;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -95,6 +96,7 @@ class ReportController extends Controller
 
     public function update(Report $report, Request $request)
     {
+        $report->load(['user', 'status']);
         $validated = $request->validate([
             'status_id' => ['required', 'exists:statuses,id'],
         ]);
@@ -102,6 +104,8 @@ class ReportController extends Controller
         $report->update([
             'status_id' => $validated['status_id'],
         ]);
+
+        $report->user->notify(new ReportStatusNotification($report));
 
         return redirect(route('reports.show', $report->id));
 
