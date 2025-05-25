@@ -104,9 +104,8 @@ import { Head, Link } from "@inertiajs/vue3"
                         </div>
                         <div class="flex items-center justify-center">
                             <div class="relative">
-                                <img src="/placeholder.svg?height=400&width=600" width="600" height="400"
-                                    alt="Infrastructure reporting app interface"
-                                    class="mx-auto aspect-[3/2] overflow-hidden rounded-xl object-cover shadow-2xl" />
+                                <img src="photo-4.png" alt="Infrastructure reporting app interface"
+                                    class="mx-auto  w-[100%] h-[100%] overflow-hidden rounded-xl object-cover shadow-2xl" />
                                 <div
                                     class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-xl" />
                             </div>
@@ -133,7 +132,7 @@ import { Head, Link } from "@inertiajs/vue3"
                         </div>
                     </div>
                     <div class="mx-auto grid max-w-5xl items-center gap-6 py-12 lg:grid-cols-3 lg:gap-12">
-                        <Card class="border-0 shadow-lg">
+                        <Card class="border-0 shadow-lg h-full">
                             <CardHeader class="text-center">
                                 <div
                                     class="mx-auto w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center mb-4">
@@ -149,7 +148,7 @@ import { Head, Link } from "@inertiajs/vue3"
                                 </p>
                             </CardContent>
                         </Card>
-                        <Card class="border-0 shadow-lg">
+                        <Card class="border-0 shadow-lg h-full">
                             <CardHeader class="text-center">
                                 <div
                                     class="mx-auto w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mb-4">
@@ -164,7 +163,7 @@ import { Head, Link } from "@inertiajs/vue3"
                                 </p>
                             </CardContent>
                         </Card>
-                        <Card class="border-0 shadow-lg">
+                        <Card class="border-0 shadow-lg h-full">
                             <CardHeader class="text-center">
                                 <div
                                     class="mx-auto w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
@@ -263,105 +262,102 @@ import { Head, Link } from "@inertiajs/vue3"
                         </div>
                     </div>
                     <div class="mx-auto grid max-w-5xl items-start gap-6 py-12 lg:grid-cols-2 lg:gap-12">
-                        <div class="grid gap-6">
-                            <Card class="border-0 shadow-lg">
-                                <CardHeader>
-                                    <div class="flex items-center space-x-3">
-                                        <div
-                                            class="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center">
-                                            <Camera class="h-5 w-5 text-emerald-600" />
-                                        </div>
-                                        <CardTitle>Photo Documentation</CardTitle>
-                                    </div>
-                                </CardHeader>
-                                <CardContent>
-                                    <p class="text-slate-600">
-                                        Capture high-quality photos with automatic metadata including timestamp, GPS
-                                        coordinates, and
-                                        device information for comprehensive documentation.
-                                    </p>
-                                </CardContent>
-                            </Card>
-                            <Card class="border-0 shadow-lg">
-                                <CardHeader>
-                                    <div class="flex items-center space-x-3">
-                                        <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                                            <MapPin class="h-5 w-5 text-blue-600" />
-                                        </div>
-                                        <CardTitle>Precise Location Tracking</CardTitle>
-                                    </div>
-                                </CardHeader>
-                                <CardContent>
-                                    <p class="text-slate-600">
-                                        Automatic GPS location capture ensures authorities can find and address reported
-                                        issues quickly
-                                        and efficiently.
-                                    </p>
-                                </CardContent>
-                            </Card>
 
-                        </div>
-                        <div class="grid gap-6">
-                            <Card class="border-0 shadow-lg">
-                                <CardHeader>
-                                    <div class="flex items-center space-x-3">
-                                        <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                                            <Shield class="h-5 w-5 text-green-600" />
-                                        </div>
-                                        <CardTitle>Anonymous Reporting</CardTitle>
+                        <Card class="border-0 shadow-lg h-full">
+                            <CardHeader>
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center">
+                                        <Camera class="h-5 w-5 text-emerald-600" />
                                     </div>
-                                </CardHeader>
-                                <CardContent>
-                                    <p class="text-slate-600">
-                                        Report issues anonymously if preferred, ensuring everyone feels safe to
-                                        contribute to community
-                                        safety and infrastructure improvement.
-                                    </p>
-                                </CardContent>
-                            </Card>
-                            <Card class="border-0 shadow-lg">
-                                <CardHeader>
-                                    <div class="flex items-center space-x-3">
-                                        <div
-                                            class="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
-                                            <Clock class="h-5 w-5 text-orange-600" />
-                                        </div>
-                                        <CardTitle>Real-time Status Updates</CardTitle>
+                                    <CardTitle>Photo Documentation</CardTitle>
+                                </div>
+                            </CardHeader>
+                            <CardContent>
+                                <p class="text-slate-600">
+                                    Capture high-quality photos with automatic metadata including timestamp, GPS
+                                    coordinates, and
+                                    device information for comprehensive documentation.
+                                </p>
+                            </CardContent>
+                        </Card>
+                        <Card class="border-0 shadow-lg h-full">
+                            <CardHeader>
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                                        <MapPin class="h-5 w-5 text-blue-600" />
                                     </div>
-                                </CardHeader>
-                                <CardContent>
-                                    <p class="text-slate-600">
-                                        Track the progress of your reports from submission to completion, with
-                                        notifications at each stage
-                                        of the repair process.
-                                    </p>
-                                </CardContent>
-                            </Card>
-                            <Card class="border-0 shadow-lg">
-                                <CardHeader>
-                                    <div class="flex items-center space-x-3">
-                                        <div class="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center">
-                                            <AlertTriangle class="h-5 w-5 text-red-600" />
-                                        </div>
-                                        <CardTitle>Priority Classification</CardTitle>
+                                    <CardTitle>Precise Location Tracking</CardTitle>
+                                </div>
+                            </CardHeader>
+                            <CardContent>
+                                <p class="text-slate-600">
+                                    Automatic GPS location capture ensures authorities can find and address reported
+                                    issues quickly
+                                    and efficiently.
+                                </p>
+                            </CardContent>
+                        </Card>
+
+
+                        <Card class="border-0 shadow-lg h-full">
+                            <CardHeader>
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+                                        <Shield class="h-5 w-5 text-green-600" />
                                     </div>
-                                </CardHeader>
-                                <CardContent>
-                                    <p class="text-slate-600">
-                                        Severity assessment helps authorities prioritize urgent safety issues
-                                        while ensuring all
-                                        reports receive appropriate attention.
-                                    </p>
-                                </CardContent>
-                            </Card>
-                        </div>
+                                    <CardTitle>Anonymous Reporting</CardTitle>
+                                </div>
+                            </CardHeader>
+                            <CardContent>
+                                <p class="text-slate-600">
+                                    Report issues anonymously if preferred, ensuring everyone feels safe to
+                                    contribute to community
+                                    safety and infrastructure improvement.
+                                </p>
+                            </CardContent>
+                        </Card>
+                        <Card class="border-0 shadow-lg h-full">
+                            <CardHeader>
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
+                                        <Clock class="h-5 w-5 text-orange-600" />
+                                    </div>
+                                    <CardTitle>Real-time Status Updates</CardTitle>
+                                </div>
+                            </CardHeader>
+                            <CardContent>
+                                <p class="text-slate-600">
+                                    Track the progress of your reports from submission to completion, with
+                                    notifications at each stage
+                                    of the repair process.
+                                </p>
+                            </CardContent>
+                        </Card>
+                        <Card class="border-0 shadow-lg h-full">
+                            <CardHeader>
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center">
+                                        <AlertTriangle class="h-5 w-5 text-red-600" />
+                                    </div>
+                                    <CardTitle>Priority Classification</CardTitle>
+                                </div>
+                            </CardHeader>
+                            <CardContent>
+                                <p class="text-slate-600">
+                                    Severity assessment helps authorities prioritize urgent safety issues
+                                    while ensuring all
+                                    reports receive appropriate attention.
+                                </p>
+                            </CardContent>
+                        </Card>
+
                     </div>
                 </div>
             </section>
 
             <section id="impact" class="w-full py-12 md:py-24 lg:py-32">
                 <div class="flex-1 px-4 md:px-6">
-                    <div class="grid items-center gap-6 lg:grid-cols-[1fr_500px] lg:gap-12 xl:grid-cols-[1fr_550px]">
+                    <div class="grid items-center gap-6 lg:grid-cols-[1fr_400px] lg:gap-12 xl:grid-cols-[1fr_600px]">
                         <div class="flex flex-col justify-center space-y-4">
                             <div class="space-y-2">
                                 <Badge variant="secondary" class="w-fit bg-emerald-100 text-emerald-800">
@@ -400,9 +396,16 @@ import { Head, Link } from "@inertiajs/vue3"
                                 <Button variant="outline">View Case Studies</Button>
                             </div>
                         </div>
-                        <img src="/placeholder.svg?height=400&width=550" width="550" height="400"
-                            alt="Community impact visualization"
-                            class="mx-auto aspect-video overflow-hidden rounded-xl object-cover shadow-xl lg:order-last" />
+                        <!-- <img src="photo-3.png" alt="Community impact visualization"
+                            class="mx-auto  w-[100%] h-[100%] overflow-hidden rounded-xl object-cover shadow-2xl" /> -->
+                        <div class="flex items-center justify-center">
+                            <div class="relative">
+                                <img src="photo-3.png" alt="Infrastructure reporting app interface"
+                                    class="mx-auto  w-[100%] h-[100%] overflow-hidden rounded-xl object-cover shadow-2xl" />
+                                <div
+                                    class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-xl" />
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
