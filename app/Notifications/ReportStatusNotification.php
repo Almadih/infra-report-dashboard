@@ -27,7 +27,7 @@ class ReportStatusNotification extends Notification implements ShouldQueue
      */
     public function via()
     {
-        return ['fcm'];
+        return ['fcm', 'database'];
     }
 
     // optional: you can use according to your requirement.
@@ -57,8 +57,14 @@ class ReportStatusNotification extends Notification implements ShouldQueue
      */
     public function toArray(object $notifiable): array
     {
+        $status = Str::headline($this->report->status->name);
+
         return [
-            //
+            'title' => 'Report Status updated',
+            'body' => "Report #{$this->report->id} status has been updated to {$status}",
+            'data' => [
+                'report_id' => $this->report->id,
+            ],
         ];
     }
 }

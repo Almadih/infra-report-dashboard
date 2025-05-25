@@ -3,6 +3,8 @@
 use App\Http\Controllers\AnonymousAuthController;
 use App\Http\Controllers\DamageTypeController;
 use App\Http\Controllers\FCMTokenController;
+use App\Http\Controllers\GetNotificationsController;
+use App\Http\Controllers\ReadNotificationsController;
 use App\Http\Controllers\SeverityController;
 use App\Http\Controllers\Users\MyReportsController;
 use App\Http\Controllers\Users\ReportController;
@@ -15,4 +17,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::resource('damage-types', DamageTypeController::class)->only('index');
     Route::resource('severities', SeverityController::class)->only('index');
     Route::post('/fcm-token', FCMTokenController::class)->name('fcm-token');
+    Route::group(['prefix' => 'notifications'], function () {
+        Route::get('/', GetNotificationsController::class)->name('notifications.index');
+        Route::get('/read-all', ReadNotificationsController::class)->name('notifications.read-all');
+    });
 });
