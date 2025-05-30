@@ -85,11 +85,11 @@ import { Head, Link } from "@inertiajs/vue3"
                                 </p>
                             </div>
                             <div class="flex flex-col gap-2 min-[400px]:flex-row">
-                                <Button size="lg" class="bg-emerald-600 hover:bg-emerald-700 text-white">
+                                <Button size="lg" class="bg-emerald-600 hover:bg-emerald-700 text-white cursor-pointer">
                                     Start Reporting
                                 </Button>
                                 <Button variant="outline" size="lg"
-                                    class="dark:text-slate-50 dark:border-slate-600 dark:hover:bg-slate-800">
+                                    class="dark:text-slate-50 dark:border-slate-600 dark:hover:bg-slate-800 cursor-pointer">
                                     Learn More
                                 </Button>
                             </div>
@@ -527,11 +527,11 @@ import { Head, Link } from "@inertiajs/vue3"
                         </div>
                         <div class="flex flex-col gap-2 min-[400px]:flex-row">
                             <Button size="lg"
-                                class="bg-white text-emerald-600 hover:bg-slate-100 dark:bg-slate-50 dark:text-emerald-700 dark:hover:bg-slate-200">
+                                class="cursor-pointer bg-white text-emerald-600 hover:bg-slate-100 dark:bg-slate-50 dark:text-emerald-700 dark:hover:bg-slate-200">
                                 Download the App
                             </Button>
                             <Button size="lg"
-                                class="bg-white text-emerald-600 hover:bg-slate-100 dark:bg-slate-50 dark:text-emerald-700 dark:hover:bg-slate-200">
+                                class="cursor-pointer bg-white text-emerald-600 hover:bg-slate-100 dark:bg-slate-50 dark:text-emerald-700 dark:hover:bg-slate-200">
                                 Learn More
                             </Button>
                         </div>
