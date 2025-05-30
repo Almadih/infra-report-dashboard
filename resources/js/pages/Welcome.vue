@@ -28,10 +28,7 @@ import { Head, Link } from "@inertiajs/vue3"
             class="px-4 lg:px-6 h-16 flex items-center border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm sticky top-0 z-50">
             <Link href="/" class="flex items-center justify-center">
             <div class="flex items-center space-x-2">
-                <div class="w-8 h-8 bg-emerald-600 rounded-lg flex items-center justify-center">
-                    <AlertTriangle class="h-5 w-5 text-white" />
-                </div>
-                <span class="font-bold text-xl text-slate-900 dark:text-slate-50">InfraReport</span>
+                <img src="logo.png" class="w-auto h-12" />
             </div>
             </Link>
             <nav class="ml-auto flex gap-4 sm:gap-6">
