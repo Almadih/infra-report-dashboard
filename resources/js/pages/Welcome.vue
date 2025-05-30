@@ -16,6 +16,13 @@ import {
     Wrench,
 } from "lucide-vue-next"
 import { Head, Link } from "@inertiajs/vue3"
+import { Auth, User } from "@/types"
+
+type HomePageProps = {
+    auth: Auth
+}
+
+defineProps<HomePageProps>()
 
 </script>
 
@@ -32,7 +39,7 @@ import { Head, Link } from "@inertiajs/vue3"
             </div>
             </Link>
             <nav class="ml-auto flex gap-4 sm:gap-6">
-                <Link v-if="$page.props.auth.user" :href="route('dashboard')"
+                <Link v-if="auth.user" :href="route('dashboard')"
                     class="text-sm font-medium text-slate-700 hover:text-emerald-600 dark:text-slate-300 dark:hover:text-emerald-400 transition-colors">
                 Dashboard
                 </Link>
