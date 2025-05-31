@@ -47,23 +47,6 @@ jobs:
         run: npm i
       - name: build frontend assets
         run: npm run build
-
-      - name: Copy .env.testing
-        run: cp .env.testing .env
-      - name: Generate app key
-        run: php artisan key:generate
-
-      - name: Configure .env for PostgreSQL
-        run: |
-          sed -i 's/DB_CONNECTION=.*/DB_CONNECTION=pgsql/' .env
-          sed -i 's/DB_HOST=.*/DB_HOST=127.0.0.1/' .env
-          sed -i 's/DB_PORT=.*/DB_PORT=5432/' .env
-          sed -i 's/DB_DATABASE=.*/DB_DATABASE=laravel/' .env
-          sed -i 's/DB_USERNAME=.*/DB_USERNAME=postgres/' .env
-          sed -i 's/DB_PASSWORD=.*/DB_PASSWORD=password/' .env
-
-      - name: debug env
-        run: cat .env
       - name: Wait for PostgreSQL to be ready
         run: |
           for i in {1..15}; do
@@ -72,8 +55,12 @@ jobs:
             sleep 2
           done
 
-      - name: Run migrations
-        run: php artisan migrate --force
-
       - name: Run tests
+        env:
+          DB_CONNECTION: pgsql
+          DB_DATABASE: laravel
+          DB_PORT: 5432
+          DB_HOST: 127.0.0.1
+          DB_USERNAME: postgres
+          DB_PASSWORD: password
         run: composer run test
