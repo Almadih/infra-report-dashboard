@@ -63,6 +63,8 @@ jobs:
           sed -i 's/DB_USERNAME=.*/DB_USERNAME=postgres/' .env.testing
           sed -i 's/DB_PASSWORD=.*/DB_PASSWORD=password/' .env.testing
 
+      - name: debug env
+        run: cat .env.testing
       - name: Wait for PostgreSQL to be ready
         run: |
           for i in {1..15}; do
