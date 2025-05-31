@@ -48,17 +48,22 @@ jobs:
       - name: build frontend assets
         run: npm run build
 
-      - name: Configure .env.testing for PostgreSQL
+      - name: Copy .env.testing
+        run: cp .env.testing .env
+      - name: Generate app key
+        run: php artisan key:generate
+
+      - name: Configure .env for PostgreSQL
         run: |
-          sed -i 's/DB_CONNECTION=.*/DB_CONNECTION=pgsql/' .env.testing
-          sed -i 's/DB_HOST=.*/DB_HOST=127.0.0.1/' .env.testing
-          sed -i 's/DB_PORT=.*/DB_PORT=5432/' .env.testing
-          sed -i 's/DB_DATABASE=.*/DB_DATABASE=laravel/' .env.testing
-          sed -i 's/DB_USERNAME=.*/DB_USERNAME=postgres/' .env.testing
-          sed -i 's/DB_PASSWORD=.*/DB_PASSWORD=password/' .env.testing
+          sed -i 's/DB_CONNECTION=.*/DB_CONNECTION=pgsql/' .env
+          sed -i 's/DB_HOST=.*/DB_HOST=127.0.0.1/' .env
+          sed -i 's/DB_PORT=.*/DB_PORT=5432/' .env
+          sed -i 's/DB_DATABASE=.*/DB_DATABASE=laravel/' .env
+          sed -i 's/DB_USERNAME=.*/DB_USERNAME=postgres/' .env
+          sed -i 's/DB_PASSWORD=.*/DB_PASSWORD=password/' .env
 
       - name: debug env
-        run: cat .env.testing
+        run: cat .env
       - name: Wait for PostgreSQL to be ready
         run: |
           for i in {1..15}; do
