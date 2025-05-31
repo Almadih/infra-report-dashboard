@@ -48,6 +48,7 @@ The Infra Report is a web application designed to facilitate the reporting, trac
     ```
 
     Update `.env` with your database credentials and other necessary configuration.
+    To config FCM make sure to put your `service-account.json` in `config/` folder.
 
 5. Generate the application key:
 
@@ -68,10 +69,17 @@ The Infra Report is a web application designed to facilitate the reporting, trac
     ```
 
 8. Start the development server:
+
     ```bash
     php artisan serve
     ```
+
     The application will be accessible at `http://localhost:8000`.
+
+9. Testing
+    ```
+    php artisan test
+    ```
 
 ### Usage
 

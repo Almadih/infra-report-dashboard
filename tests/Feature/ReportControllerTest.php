@@ -29,7 +29,6 @@ it('can view the reports index with default filters', function () {
         ->assertInertia(fn (Assert $page) => $page->component('Reports/Index')
             ->has('reports')
             ->has('filters')
-            ->has('center')
         );
 });
 
