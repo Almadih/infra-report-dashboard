@@ -1,36 +1,34 @@
 <script setup lang="ts">
 import ReportsHeatMap from '@/components/ReportsHeatMap.vue';
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { Report, type BreadcrumbItem } from '@/types';
 import { formatDate, severityColors, statusColors } from '@/utils';
 import { Head, router } from '@inertiajs/vue3';
-import { Activity, AlertTriangle, Clock, FileText } from "lucide-vue-next";
+import { Activity, AlertTriangle, Clock, FileText } from 'lucide-vue-next';
 interface props {
-    reports: Report[],
+    reports: Report[];
     stats: {
         totalReports: {
-            value: number,
-            details: string,
-        },
+            value: number;
+            details: string;
+        };
         todaysReports: {
-            value: number,
-            details: string,
-        },
+            value: number;
+            details: string;
+        };
         pendingReports: {
-            value: number,
-            details: string,
-        },
+            value: number;
+            details: string;
+        };
         criticalReports: {
-            value: number,
-            details: string,
-        },
-
-
-    }
+            value: number;
+            details: string;
+        };
+    };
 }
 
 defineProps<props>();
@@ -48,7 +46,6 @@ const formatNumber = (num: number) => {
 </script>
 
 <template>
-
     <Head title="Dashboard" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
@@ -59,31 +56,31 @@ const formatNumber = (num: number) => {
                         <Card>
                             <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
                                 <CardTitle class="text-sm font-medium">Total Reports</CardTitle>
-                                <FileText class="h-4 w-4 text-muted-foreground" />
+                                <FileText class="text-muted-foreground h-4 w-4" />
                             </CardHeader>
                             <CardContent>
                                 <div class="text-2xl font-bold">{{ formatNumber(stats.totalReports.value) }}</div>
-                                <p class="text-xs text-muted-foreground">{{ stats.totalReports.details }}</p>
+                                <p class="text-muted-foreground text-xs">{{ stats.totalReports.details }}</p>
                             </CardContent>
                         </Card>
                         <Card>
                             <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
                                 <CardTitle class="text-sm font-medium">Today's Reports</CardTitle>
-                                <Clock class="h-4 w-4 text-muted-foreground" />
+                                <Clock class="text-muted-foreground h-4 w-4" />
                             </CardHeader>
                             <CardContent>
                                 <div class="text-2xl font-bold">{{ formatNumber(stats.todaysReports.value) }}</div>
-                                <p class="text-xs text-muted-foreground">{{ stats.todaysReports.details }}</p>
+                                <p class="text-muted-foreground text-xs">{{ stats.todaysReports.details }}</p>
                             </CardContent>
                         </Card>
                         <Card>
                             <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
                                 <CardTitle class="text-sm font-medium">Open Reports</CardTitle>
-                                <Activity class="h-4 w-4 text-muted-foreground" />
+                                <Activity class="text-muted-foreground h-4 w-4" />
                             </CardHeader>
                             <CardContent>
                                 <div class="text-2xl font-bold">{{ formatNumber(stats.pendingReports.value) }}</div>
-                                <p class="text-xs text-muted-foreground">{{ stats.pendingReports.details }}</p>
+                                <p class="text-muted-foreground text-xs">{{ stats.pendingReports.details }}</p>
                             </CardContent>
                         </Card>
                         <Card>
@@ -93,7 +90,7 @@ const formatNumber = (num: number) => {
                             </CardHeader>
                             <CardContent>
                                 <div class="text-2xl font-bold">{{ formatNumber(stats.criticalReports.value) }}</div>
-                                <p class="text-xs text-muted-foreground">{{ stats.criticalReports.details }}</p>
+                                <p class="text-muted-foreground text-xs">{{ stats.criticalReports.details }}</p>
                             </CardContent>
                         </Card>
                     </div>
@@ -101,9 +98,7 @@ const formatNumber = (num: number) => {
                         <Card class="col-span-4">
                             <CardHeader>
                                 <CardTitle>Last 7 Days Reports Heatmap</CardTitle>
-                                <CardDescription>
-                                    Heatmap of last 7 days reports showing the distribution and volume of reports.
-                                </CardDescription>
+                                <CardDescription> Heatmap of last 7 days reports showing the distribution and volume of reports. </CardDescription>
                             </CardHeader>
                             <CardContent class="pl-2">
                                 <ReportsHeatMap />
@@ -135,30 +130,29 @@ const formatNumber = (num: number) => {
                                             <TableCell>{{ report.address }}</TableCell>
                                             <TableCell>
                                                 <Badge class="capitalize" :class="severityColors[report.severity.name]">
-                                                    {{
-                                                        report.severity.name.replace("_", " ")
-                                                    }}
+                                                    {{ report.severity.name.replace('_', ' ') }}
                                                 </Badge>
                                             </TableCell>
                                             <TableCell>
-                                                <Badge variant="outline" class="capitalize"
-                                                    :class="statusColors[report.status.name]">{{
-                                                        report.status.name.replace("_", " ")
-                                                    }}
+                                                <Badge variant="outline" class="capitalize" :class="statusColors[report.status.name]"
+                                                    >{{ report.status.name.replace('_', ' ') }}
                                                 </Badge>
                                             </TableCell>
                                             <TableCell>
                                                 {{ formatDate(report.created_at) }}
                                             </TableCell>
                                             <TableCell class="text-right">
-                                                <Button @click="() => {
-                                                    router.get(route('reports.show', report.id))
-                                                }">
+                                                <Button
+                                                    @click="
+                                                        () => {
+                                                            router.get(route('reports.show', report.id));
+                                                        }
+                                                    "
+                                                >
                                                     View
                                                 </Button>
                                             </TableCell>
                                         </TableRow>
-
                                     </TableBody>
                                 </Table>
                             </CardContent>

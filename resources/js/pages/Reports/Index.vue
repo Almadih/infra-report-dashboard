@@ -1,40 +1,30 @@
 <script setup lang="ts">
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import AppLayout from '@/layouts/AppLayout.vue';
-import { BreadcrumbItem, ModelPagination, Report, ReportFilters } from '@/types';
-import { flattenFilters, formatDate, severityColors, statusColors } from '@/utils';
-import { Head, router } from '@inertiajs/vue3';
-import {
-    Pagination,
-    PaginationContent,
-    PaginationEllipsis,
-    PaginationItem,
-    PaginationNext,
-    PaginationPrevious,
-} from '@/components/ui/pagination'
+import DateRangeFilter from '@/components/DateRangeFilter.vue';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
     DropdownMenu,
     DropdownMenuCheckboxItem,
     DropdownMenuContent,
-    DropdownMenuItem,
     DropdownMenuLabel,
-    DropdownMenuRadioGroup,
-    DropdownMenuRadioItem,
     DropdownMenuSeparator,
     DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { CalendarIcon, ChevronDown } from "lucide-vue-next";
-import { ref, watch } from "vue";
-import DateRangeFilter from "@/components/DateRangeFilter.vue";
+} from '@/components/ui/dropdown-menu';
+import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationNext, PaginationPrevious } from '@/components/ui/pagination';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import AppLayout from '@/layouts/AppLayout.vue';
+import { BreadcrumbItem, ModelPagination, Report, ReportFilters } from '@/types';
+import { flattenFilters, formatDate, severityColors, statusColors } from '@/utils';
+import { Head, router } from '@inertiajs/vue3';
+import { ChevronDown } from 'lucide-vue-next';
+import { ref, watch } from 'vue';
 
 type props = {
-    reports: ModelPagination<Report>,
-    filters: ReportFilters
-}
-const props = defineProps<props>()
+    reports: ModelPagination<Report>;
+    filters: ReportFilters;
+};
+const props = defineProps<props>();
 const breadcrumbs: BreadcrumbItem[] = [
     {
         title: 'Reports',
@@ -59,30 +49,35 @@ const filters = ref({
     date: {
         start: props.filters?.date?.start ?? '',
         end: props.filters?.date?.end ?? '',
-    }
+    },
 });
 
-watch(filters, (newFilters) => {
-    const query = flattenFilters(newFilters);
-    router.get(route('reports.index'), query, {
-        preserveState: true,
-        replace: true,
-    });
-}, { deep: true });
+watch(
+    filters,
+    (newFilters) => {
+        const query = flattenFilters(newFilters);
+        router.get(route('reports.index'), query, {
+            preserveState: true,
+            replace: true,
+        });
+    },
+    { deep: true },
+);
 
 const handlePageChange = (page: number) => {
     const query = flattenFilters(filters.value);
 
-    router.get(route('reports.index'), { page, ...query }, {
-        preserveState: true,
-
-    });
+    router.get(
+        route('reports.index'),
+        { page, ...query },
+        {
+            preserveState: true,
+        },
+    );
 };
-
 </script>
 
 <template>
-
     <Head title="Reports" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
@@ -98,20 +93,28 @@ const handlePageChange = (page: number) => {
                     <DropdownMenuContent align="end">
                         <DropdownMenuLabel>Status</DropdownMenuLabel>
                         <DropdownMenuSeparator />
-                        <DropdownMenuCheckboxItem :model-value="filters.status.pending"
-                            @update:model-value="() => filters.status.pending = !filters.status.pending">
+                        <DropdownMenuCheckboxItem
+                            :model-value="filters.status.pending"
+                            @update:model-value="() => (filters.status.pending = !filters.status.pending)"
+                        >
                             Pending
                         </DropdownMenuCheckboxItem>
-                        <DropdownMenuCheckboxItem :model-value="filters.status.under_review"
-                            @update:model-value="() => filters.status.under_review = !filters.status.under_review">
+                        <DropdownMenuCheckboxItem
+                            :model-value="filters.status.under_review"
+                            @update:model-value="() => (filters.status.under_review = !filters.status.under_review)"
+                        >
                             Under Review
                         </DropdownMenuCheckboxItem>
-                        <DropdownMenuCheckboxItem :model-value="filters.status.verified"
-                            @update:model-value="() => filters.status.verified = !filters.status.verified">
+                        <DropdownMenuCheckboxItem
+                            :model-value="filters.status.verified"
+                            @update:model-value="() => (filters.status.verified = !filters.status.verified)"
+                        >
                             Verified
                         </DropdownMenuCheckboxItem>
-                        <DropdownMenuCheckboxItem :model-value="filters.status.resolved"
-                            @update:model-value="() => filters.status.resolved = !filters.status.resolved">
+                        <DropdownMenuCheckboxItem
+                            :model-value="filters.status.resolved"
+                            @update:model-value="() => (filters.status.resolved = !filters.status.resolved)"
+                        >
                             Resolved
                         </DropdownMenuCheckboxItem>
                     </DropdownMenuContent>
@@ -127,27 +130,35 @@ const handlePageChange = (page: number) => {
                     <DropdownMenuContent align="end">
                         <DropdownMenuLabel>Severity</DropdownMenuLabel>
                         <DropdownMenuSeparator />
-                        <DropdownMenuCheckboxItem :model-value="filters.severity.critical"
-                            @update:model-value="() => filters.severity.critical = !filters.severity.critical">
+                        <DropdownMenuCheckboxItem
+                            :model-value="filters.severity.critical"
+                            @update:model-value="() => (filters.severity.critical = !filters.severity.critical)"
+                        >
                             Critical
                         </DropdownMenuCheckboxItem>
-                        <DropdownMenuCheckboxItem :model-value="filters.severity.high"
-                            @update:model-value="() => filters.severity.high = !filters.severity.high">
+                        <DropdownMenuCheckboxItem
+                            :model-value="filters.severity.high"
+                            @update:model-value="() => (filters.severity.high = !filters.severity.high)"
+                        >
                             High
                         </DropdownMenuCheckboxItem>
-                        <DropdownMenuCheckboxItem :model-value="filters.severity.medium"
-                            @update:model-value="() => filters.severity.medium = !filters.severity.medium">
+                        <DropdownMenuCheckboxItem
+                            :model-value="filters.severity.medium"
+                            @update:model-value="() => (filters.severity.medium = !filters.severity.medium)"
+                        >
                             Medium
                         </DropdownMenuCheckboxItem>
-                        <DropdownMenuCheckboxItem :model-value="filters.severity.low"
-                            @update:model-value="() => filters.severity.low = !filters.severity.low">
+                        <DropdownMenuCheckboxItem
+                            :model-value="filters.severity.low"
+                            @update:model-value="() => (filters.severity.low = !filters.severity.low)"
+                        >
                             Low
                         </DropdownMenuCheckboxItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
 
                 <div class="space-y-2">
-                    <DateRangeFilter :isFullWidth="true" @update:range="(range) => filters.date = range" />
+                    <DateRangeFilter :isFullWidth="true" @update:range="(range) => (filters.date = range)" />
                 </div>
             </div>
             <Card>
@@ -174,42 +185,45 @@ const handlePageChange = (page: number) => {
                                 <TableCell>{{ report.address }}</TableCell>
                                 <TableCell>
                                     <Badge class="capitalize" :class="severityColors[report.severity.name]">
-                                        {{
-                                            report.severity.name.replace("_", " ")
-                                        }}
+                                        {{ report.severity.name.replace('_', ' ') }}
                                     </Badge>
                                 </TableCell>
                                 <TableCell>
-                                    <Badge variant="outline" class="capitalize"
-                                        :class="statusColors[report.status.name]">{{
-                                            report.status.name.replace("_", " ")
-                                        }}
+                                    <Badge variant="outline" class="capitalize" :class="statusColors[report.status.name]"
+                                        >{{ report.status.name.replace('_', ' ') }}
                                     </Badge>
                                 </TableCell>
                                 <TableCell>
                                     {{ formatDate(report.created_at) }}
                                 </TableCell>
                                 <TableCell class="text-right">
-                                    <Button @click="() => {
-                                        router.get(route('reports.show', report.id))
-                                    }">
+                                    <Button
+                                        @click="
+                                            () => {
+                                                router.get(route('reports.show', report.id));
+                                            }
+                                        "
+                                    >
                                         View
                                     </Button>
                                 </TableCell>
                             </TableRow>
-
                         </TableBody>
                     </Table>
                     <div>
-
-                        <Pagination v-slot="{ page }" :items-per-page="reports.per_page" :total="reports.total"
-                            :default-page="1" :siblingCount="1" @update:page="handlePageChange">
+                        <Pagination
+                            v-slot="{ page }"
+                            :items-per-page="reports.per_page"
+                            :total="reports.total"
+                            :default-page="1"
+                            :siblingCount="1"
+                            @update:page="handlePageChange"
+                        >
                             <PaginationContent v-slot="{ items }">
                                 <PaginationPrevious />
 
                                 <template v-for="(item, index) in items" :key="index">
-                                    <PaginationItem v-if="item.type === 'page'" :value="item.value"
-                                        :is-active="item.value === page">
+                                    <PaginationItem v-if="item.type === 'page'" :value="item.value" :is-active="item.value === page">
                                         {{ item.value }}
                                     </PaginationItem>
                                 </template>
@@ -220,14 +234,10 @@ const handlePageChange = (page: number) => {
                             </PaginationContent>
                         </Pagination>
 
-                        <div class="text-sm text-gray-600 mt-4">
-                            Showing {{ reports.from }} to {{ reports.to }} of {{ reports.total }} results
-                        </div>
-
+                        <div class="mt-4 text-sm text-gray-600">Showing {{ reports.from }} to {{ reports.to }} of {{ reports.total }} results</div>
                     </div>
                 </CardContent>
             </Card>
         </div>
     </AppLayout>
-
 </template>

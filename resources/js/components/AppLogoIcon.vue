@@ -14,6 +14,6 @@ defineProps<Props>();
 
 <template>
     <div class="flex items-center space-x-2">
-        <img src="/logo.png" class="w-auto h-11" />
+        <img src="/logo.png" class="h-11 w-auto" />
     </div>
 </template>
