@@ -24,7 +24,7 @@ defineProps<HomePageProps>();
             class="sticky top-0 z-50 flex h-16 items-center border-b border-slate-200 bg-white/80 px-4 backdrop-blur-sm lg:px-6 dark:border-slate-800 dark:bg-slate-900/80">
             <Link href="/" class="flex items-center justify-center">
             <div class="flex items-center space-x-2">
-                <img src="logo.png" class="h-12 w-auto" alt="infra report logo" />
+                <img src="logo.webp" class="h-12 w-auto" alt="infra report logo" />
             </div>
             </Link>
             <nav class="ml-auto flex gap-4 sm:gap-6">
@@ -106,7 +106,7 @@ defineProps<HomePageProps>();
                         </div>
                         <div class="flex items-center justify-center">
                             <div class="relative">
-                                <img src="photo-4.png" alt="Infrastructure reporting app interface"
+                                <img src="photo-4.webp" alt="Infrastructure reporting app interface"
                                     class="mx-auto h-[100%] w-[100%] overflow-hidden rounded-xl object-cover shadow-2xl" />
                                 <div
                                     class="absolute inset-0 rounded-xl bg-gradient-to-t from-black/20 to-transparent dark:from-black/40" />
@@ -420,7 +420,7 @@ defineProps<HomePageProps>();
                         </div>
                         <div class="flex items-center justify-center">
                             <div class="relative">
-                                <img src="photo-3.png" alt="Community impact visualization"
+                                <img src="photo-3.webp" alt="Community impact visualization"
                                     class="mx-auto h-[100%] w-[100%] overflow-hidden rounded-xl object-cover shadow-2xl" />
                                 <div
                                     class="absolute inset-0 rounded-xl bg-gradient-to-t from-black/20 to-transparent dark:from-black/40" />
