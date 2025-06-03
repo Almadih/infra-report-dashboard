@@ -81,9 +81,10 @@ defineProps<HomePageProps>();
                                 </p>
                             </div>
                             <div class="flex flex-col gap-2 min-[400px]:flex-row">
-                                <Button size="lg" class="cursor-pointer bg-emerald-600 text-white hover:bg-emerald-700">
-                                    Start
-                                    Reporting </Button>
+                                <Link href="#download" size="lg"
+                                    class="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive shadow-xs h-10 rounded-md px-6 has-[>svg]:px-4 cursor-pointer bg-emerald-600 text-white hover:bg-emerald-700">
+                                Start
+                                Reporting </Link>
                                 <Button variant="outline" size="lg"
                                     class="cursor-pointer dark:border-slate-600 dark:text-slate-50 dark:hover:bg-slate-800">
                                     Learn More
@@ -505,7 +506,7 @@ defineProps<HomePageProps>();
                 </div>
             </section>
 
-            <section class="w-full bg-emerald-600 py-12 md:py-24 lg:py-32 dark:bg-emerald-700">
+            <section class="w-full bg-emerald-600 py-12 md:py-24 lg:py-32 dark:bg-emerald-700" id="download">
                 <div class="flex-1 px-4 md:px-6">
                     <div class="flex flex-col items-center justify-center space-y-4 text-center">
                         <div class="space-y-2">
@@ -521,10 +522,10 @@ defineProps<HomePageProps>();
                             </p>
                         </div>
                         <div class="flex flex-col gap-2 min-[400px]:flex-row">
-                            <Button size="lg"
-                                class="cursor-pointer bg-white text-emerald-600 hover:bg-slate-100 dark:bg-slate-50 dark:text-emerald-700 dark:hover:bg-slate-200">
-                                Download the App
-                            </Button>
+                            <Link size="lg" href="https://github.com/Almadih/infra-report-app/releases/latest"
+                                class=" shadow-xs py-2 h-10 rounded-md px-6 has-[>svg]:px-4 cursor-pointer bg-white text-emerald-600 hover:bg-slate-100 dark:bg-slate-50 dark:text-emerald-700 dark:hover:bg-slate-200">
+                            Download the App
+                            </Link>
                             <Button size="lg"
                                 class="cursor-pointer bg-white text-emerald-600 hover:bg-slate-100 dark:bg-slate-50 dark:text-emerald-700 dark:hover:bg-slate-200">
                                 Learn More
@@ -542,12 +543,9 @@ defineProps<HomePageProps>();
             class="flex w-full shrink-0 flex-col items-center gap-2 border-t border-slate-200 bg-white px-4 py-6 sm:flex-row md:px-6 dark:border-slate-800 dark:bg-slate-900">
             <div class="flex flex-1 flex-col items-center justify-between md:flex-row">
                 <div class="flex items-center space-x-2">
-                    <div class="flex h-6 w-6 items-center justify-center rounded bg-emerald-600">
-                        <AlertTriangle class="h-4 w-4 text-white" />
-                    </div>
                     <span class="font-bold text-slate-900 dark:text-slate-50">InfraReport</span>
                 </div>
-                <p class="text-xs text-slate-600 dark:text-slate-400">© 2024 InfraReport. Building safer communities
+                <p class="text-xs text-slate-600 dark:text-slate-400">© 2025 InfraReport. Building safer communities
                     together.
                 </p>
                 <nav class="flex gap-4 sm:gap-6">
