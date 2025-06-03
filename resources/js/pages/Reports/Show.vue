@@ -92,6 +92,7 @@ const updateStatus = () => {
 </script>
 
 <template>
+
     <Head title="Report Details" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
@@ -116,7 +117,8 @@ const updateStatus = () => {
                             <div className="ml-auto flex items-center gap-2">
                                 <AlertDialog v-model:open="showStatusUpdateModal">
                                     <AlertDialogTrigger as-child>
-                                        <Button size="sm" :disabled="report.status.name === 'resolved'">Update Status</Button>
+                                        <Button size="sm" :disabled="report.status.name === 'resolved'">Update
+                                            Status</Button>
                                     </AlertDialogTrigger>
                                     <AlertDialogContent>
                                         <AlertDialogHeader>
@@ -130,7 +132,8 @@ const updateStatus = () => {
 
                                                 <SelectContent>
                                                     <SelectGroup>
-                                                        <SelectItem v-for="status in statuses" :key="status.id" :value="status.id" class="capitalize">
+                                                        <SelectItem v-for="status in statuses" :key="status.id"
+                                                            :value="status.id" class="capitalize">
                                                             {{ status.name.replace('_', ' ') }}
                                                         </SelectItem>
                                                     </SelectGroup>
@@ -164,9 +167,11 @@ const updateStatus = () => {
                                     <div>
                                         <dt class="text-muted-foreground text-sm font-medium">Status</dt>
                                         <dd class="text-sm">
-                                            <Badge variant="outline" :class="statusColors[report.status.name as keyof typeof statusColors]">
+                                            <Badge variant="outline"
+                                                :class="statusColors[report.status.name as keyof typeof statusColors]">
                                                 <span class="flex items-center gap-1 capitalize">
-                                                    <component class="h-4 w-4" :is="statusIcons[report.status.name as keyof typeof statusIcons]" />
+                                                    <component class="h-4 w-4"
+                                                        :is="statusIcons[report.status.name as keyof typeof statusIcons]" />
                                                     {{ report.status.name.replace('_', ' ') }}
                                                 </span>
                                             </Badge>
@@ -175,7 +180,8 @@ const updateStatus = () => {
                                     <div>
                                         <dt class="text-muted-foreground text-sm font-medium">Severity</dt>
                                         <dd class="text-sm">
-                                            <Badge class="capitalize" :class="severityColors[report.severity.name as keyof typeof severityColors]">
+                                            <Badge class="capitalize"
+                                                :class="severityColors[report.severity.name as keyof typeof severityColors]">
                                                 {{ report.severity.name }}
                                             </Badge>
                                         </dd>
@@ -206,21 +212,15 @@ const updateStatus = () => {
                             <CardTitle>Location</CardTitle>
                         </CardHeader>
                         <CardContent>
-                            <Map
-                                class="h-[500px]"
-                                :zoom="9"
-                                :center="{
+                            <Map class="h-[500px]" :zoom="9" :center="{
+                                lat: report.location.coordinates[1],
+                                lng: report.location.coordinates[0],
+                            }">
+                                <GMapMarker :position="{
                                     lat: report.location.coordinates[1],
                                     lng: report.location.coordinates[0],
-                                }"
-                            >
-                                <GMapMarker
-                                    :position="{
-                                        lat: report.location.coordinates[1],
-                                        lng: report.location.coordinates[0],
-                                        zoom: 16,
-                                    }"
-                                />
+                                    zoom: 16,
+                                }" />
                             </Map>
                         </CardContent>
                     </Card>
@@ -234,7 +234,8 @@ const updateStatus = () => {
                         <CardContent>
                             <div class="flex gap-4">
                                 <div v-for="image in report.images" :key="image.id">
-                                    <img :src="route('images.show', image.id)" alt="" class="h-100 w-auto" />
+                                    <img :src="route('images.show', image.id)" alt="report image"
+                                        class="h-100 w-auto" />
                                 </div>
                             </div>
                         </CardContent>

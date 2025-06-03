@@ -2,6 +2,6 @@
 
 <template>
     <div class="flex items-center space-x-2">
-        <img src="/logo.png" class="h-11 w-auto" />
+        <img src="/logo.png" class="h-11 w-auto" alt="infra report logo" />
     </div>
 </template>
