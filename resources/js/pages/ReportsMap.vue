@@ -23,6 +23,8 @@ type props = {
 
 const props = defineProps<props>();
 
+console.log(props.reports)
+
 const selectedReport = ref<Report | null>(null);
 
 const setCenter = () => {
@@ -99,6 +101,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 </script>
 
 <template>
+
     <Head title="Reports Map" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
@@ -119,41 +122,29 @@ const breadcrumbs: BreadcrumbItem[] = [
                             <h4 class="mb-2 text-sm font-medium">Severity</h4>
                             <div class="space-y-2">
                                 <div class="flex items-center space-x-2">
-                                    <Checkbox
-                                        id="severity-critical"
-                                        :model-value="filters.severity.critical"
-                                        @update:model-value="() => (filters.severity.critical = !filters.severity.critical)"
-                                    />
+                                    <Checkbox id="severity-critical" :model-value="filters.severity.critical"
+                                        @update:model-value="() => (filters.severity.critical = !filters.severity.critical)" />
                                     <label htmlFor="severity-critical" class="flex items-center text-sm font-medium">
                                         <Badge :class="severityColors['critical']">Critical</Badge>
                                     </label>
                                 </div>
                                 <div class="flex items-center space-x-2">
-                                    <Checkbox
-                                        id="severity-high"
-                                        :model-value="filters.severity.high"
-                                        @update:model-value="() => (filters.severity.high = !filters.severity.high)"
-                                    />
+                                    <Checkbox id="severity-high" :model-value="filters.severity.high"
+                                        @update:model-value="() => (filters.severity.high = !filters.severity.high)" />
                                     <label htmlFor="severity-high" class="flex items-center text-sm font-medium">
                                         <Badge :class="severityColors['high']">High</Badge>
                                     </label>
                                 </div>
                                 <div class="flex items-center space-x-2">
-                                    <Checkbox
-                                        id="severity-medium"
-                                        :model-value="filters.severity.medium"
-                                        @update:model-value="() => (filters.severity.medium = !filters.severity.medium)"
-                                    />
+                                    <Checkbox id="severity-medium" :model-value="filters.severity.medium"
+                                        @update:model-value="() => (filters.severity.medium = !filters.severity.medium)" />
                                     <label htmlFor="severity-medium" class="flex items-center text-sm font-medium">
                                         <Badge :class="severityColors['medium']">Medium</Badge>
                                     </label>
                                 </div>
                                 <div class="flex items-center space-x-2">
-                                    <Checkbox
-                                        id="severity-low"
-                                        :model-value="filters.severity.low"
-                                        @update:model-value="() => (filters.severity.low = !filters.severity.low)"
-                                    />
+                                    <Checkbox id="severity-low" :model-value="filters.severity.low"
+                                        @update:model-value="() => (filters.severity.low = !filters.severity.low)" />
                                     <label htmlFor="severity-low" class="flex items-center text-sm font-medium">
                                         <Badge :class="severityColors['low']">Low</Badge>
                                     </label>
@@ -165,42 +156,31 @@ const breadcrumbs: BreadcrumbItem[] = [
                             <h4 class="mb-2 text-sm font-medium">Status</h4>
                             <div class="space-y-2">
                                 <div class="flex items-center space-x-2">
-                                    <Checkbox
-                                        id="status-open"
-                                        :model-value="filters.status.pending"
-                                        @update:model-value="() => (filters.status.pending = !filters.status.pending)"
-                                    />
+                                    <Checkbox id="status-open" :model-value="filters.status.pending"
+                                        @update:model-value="() => (filters.status.pending = !filters.status.pending)" />
                                     <label htmlFor="status-open" class="flex items-center text-sm font-medium">
                                         <Badge variant="outline" :class="statusColors['pending']"> Pending </Badge>
                                     </label>
                                 </div>
                                 <div class="flex items-center space-x-2">
-                                    <Checkbox
-                                        id="status-in-progress"
-                                        :model-value="filters.status.under_review"
-                                        @update:model-value="() => (filters.status.under_review = !filters.status.under_review)"
-                                    />
+                                    <Checkbox id="status-in-progress" :model-value="filters.status.under_review"
+                                        @update:model-value="() => (filters.status.under_review = !filters.status.under_review)" />
                                     <label htmlFor="status-in-progress" class="flex items-center text-sm font-medium">
-                                        <Badge variant="outline" :class="statusColors['under_review']"> Under Review </Badge>
+                                        <Badge variant="outline" :class="statusColors['under_review']"> Under Review
+                                        </Badge>
                                     </label>
                                 </div>
 
                                 <div class="flex items-center space-x-2">
-                                    <Checkbox
-                                        id="status-in-progress"
-                                        :model-value="filters.status.verified"
-                                        @update:model-value="() => (filters.status.verified = !filters.status.verified)"
-                                    />
+                                    <Checkbox id="status-in-progress" :model-value="filters.status.verified"
+                                        @update:model-value="() => (filters.status.verified = !filters.status.verified)" />
                                     <label htmlFor="status-in-progress" class="flex items-center text-sm font-medium">
                                         <Badge variant="outline" :class="statusColors['verified']"> Verified </Badge>
                                     </label>
                                 </div>
                                 <div class="flex items-center space-x-2">
-                                    <Checkbox
-                                        id="status-resolved"
-                                        :model-value="filters.status.resolved"
-                                        @update:model-value="() => (filters.status.resolved = !filters.status.resolved)"
-                                    />
+                                    <Checkbox id="status-resolved" :model-value="filters.status.resolved"
+                                        @update:model-value="() => (filters.status.resolved = !filters.status.resolved)" />
                                     <label htmlFor="status-resolved" class="flex items-center text-sm font-medium">
                                         <Badge variant="outline" :class="statusColors['resolved']"> Resolved </Badge>
                                     </label>
@@ -213,13 +193,8 @@ const breadcrumbs: BreadcrumbItem[] = [
                             <div class="relative">
                                 <Input placeholder="Filter by location" :value="filters.location" class="pr-8" />
 
-                                <Button
-                                    v-if="filters.location"
-                                    variant="ghost"
-                                    size="icon"
-                                    class="absolute top-0 right-0 h-full"
-                                    onClick="{clearLocationFilter}"
-                                >
+                                <Button v-if="filters.location" variant="ghost" size="icon"
+                                    class="absolute top-0 right-0 h-full" onClick="{clearLocationFilter}">
                                     <X class="h-4 w-4" />
                                     <span class="sr-only">Clear location filter</span>
                                 </Button>
@@ -227,19 +202,14 @@ const breadcrumbs: BreadcrumbItem[] = [
                         </div>
 
                         <div>
-                            <Pagination
-                                v-slot="{ page }"
-                                :items-per-page="reports.per_page"
-                                :total="reports.total"
-                                :default-page="1"
-                                :siblingCount="1"
-                                @update:page="handlePageChange"
-                            >
+                            <Pagination v-slot="{ page }" :items-per-page="reports.per_page" :total="reports.total"
+                                :default-page="1" :siblingCount="1" @update:page="handlePageChange">
                                 <PaginationContent v-slot="{ items }">
                                     <PaginationPrevious />
 
                                     <template v-for="(item, index) in items" :key="index">
-                                        <PaginationItem v-if="item.type === 'page'" :value="item.value" :is-active="item.value === page">
+                                        <PaginationItem v-if="item.type === 'page'" :value="item.value"
+                                            :is-active="item.value === page">
                                             {{ item.value }}
                                         </PaginationItem>
                                     </template>
@@ -263,15 +233,11 @@ const breadcrumbs: BreadcrumbItem[] = [
                             {{ center }}
                         </GMapMarker>
 
-                        <GMapMarker
-                            @click="selectedReport = report"
-                            v-for="report in reports.data"
-                            :key="report.id"
+                        <GMapMarker @click="selectedReport = report" v-for="report in reports.data" :key="report.id"
                             :position="{
                                 lat: report.location.coordinates[1],
                                 lng: report.location.coordinates[0],
-                            }"
-                        />
+                            }" />
                     </Map>
                     <Card v-if="selectedReport" class="absolute right-4 bottom-4 left-4 z-10">
                         <CardHeader class="p-3">
@@ -292,7 +258,8 @@ const breadcrumbs: BreadcrumbItem[] = [
                                 <div>
                                     <dt class="text-muted-foreground text-sm font-medium">Status</dt>
                                     <dd class="text-sm">
-                                        <Badge variant="outline" :class="statusColors[selectedReport.status.name as keyof typeof statusColors]">
+                                        <Badge variant="outline"
+                                            :class="statusColors[selectedReport.status.name as keyof typeof statusColors]">
                                             <span class="flex items-center gap-1 capitalize">
                                                 {{ selectedReport.status.name.replace('_', ' ') }}
                                             </span>
@@ -302,10 +269,8 @@ const breadcrumbs: BreadcrumbItem[] = [
                                 <div>
                                     <dt class="text-muted-foreground text-sm font-medium">Severity</dt>
                                     <dd class="text-sm">
-                                        <Badge
-                                            class="capitalize"
-                                            :class="severityColors[selectedReport.severity.name as keyof typeof severityColors]"
-                                        >
+                                        <Badge class="capitalize"
+                                            :class="severityColors[selectedReport.severity.name as keyof typeof severityColors]">
                                             {{ selectedReport.severity.name }}
                                         </Badge>
                                     </dd>
@@ -321,7 +286,8 @@ const breadcrumbs: BreadcrumbItem[] = [
                                 </div>
                             </dl>
                             <div class="col-span-2 mt-2">
-                                <Button size="sm" variant="outline" class="w-full" @click="router.get(route('reports.show', selectedReport.id))">
+                                <Button size="sm" variant="outline" class="w-full"
+                                    @click="router.get(route('reports.show', selectedReport.id))">
                                     View Details
                                 </Button>
                             </div>

@@ -19,6 +19,6 @@ class ImageController extends Controller
         $mimeType = Storage::disk('private')->mimeType($image->path);
         $file = Storage::disk('private')->get($image->path);
 
-        return response($file, 200)->header('Content-Type', $mimeType);
+        return response($file, 200)->header('Content-Type', $mimeType)->header('Cache-Control', 'public, max-age=2592000');
     }
 }

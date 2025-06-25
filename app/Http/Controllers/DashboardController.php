@@ -14,6 +14,8 @@ class DashboardController extends Controller
 
     private const SEVERITY_CRITICAL = 'critical';
 
+    private const STATUS_RESOLVED = 'resolved';
+
     public function __invoke()
     {
         $now = Carbon::now();
@@ -101,6 +103,8 @@ class DashboardController extends Controller
     {
         $criticalCount = Report::whereHas('severity', function (Builder $query) {
             $query->where('name', self::SEVERITY_CRITICAL); // Adjust 'name' if your column is different
+        })->whereHas('status', function (Builder $query) {
+            $query->whereNot('name', self::STATUS_RESOLVED);
         })->count();
 
         return [

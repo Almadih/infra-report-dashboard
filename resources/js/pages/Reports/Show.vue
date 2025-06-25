@@ -11,13 +11,15 @@ import {
 } from '@/components/ui/alert-dialog';
 import { Badge } from '@/components/ui/badge';
 import Button from '@/components/ui/button/Button.vue';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Separator } from '@/components/ui/separator';
+import { Textarea } from '@/components/ui/textarea';
 import AppLayout from '@/layouts/AppLayout.vue';
-import { BreadcrumbItem, Report, Status } from '@/types';
+import { BreadcrumbItem, Report, Status, Update } from '@/types';
 import { formatDate, severityColors, statusColors } from '@/utils';
 import { Head, useForm } from '@inertiajs/vue3';
-import { Calendar, CheckCircle, Clock, Edit, MapPin, User } from 'lucide-vue-next';
+import { Calendar, CheckCircle, Clock, Edit, FileText, MapPin, User } from 'lucide-vue-next';
 import { onMounted, ref, watch } from 'vue';
 
 type props = {
@@ -39,9 +41,14 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 const statuses = ref<Status[]>([]);
 const showStatusUpdateModal = ref(false);
+const showReportUpdatesModal = ref(false);
 
 const form = useForm<StatusForm>({
     status_id: '',
+});
+
+const reportUpdateForm = useForm({
+    text: ''
 });
 
 const statusIcons = {
@@ -89,6 +96,12 @@ const updateStatus = () => {
         },
     });
 };
+
+const submitReportUpdatesFrom = () => {
+    reportUpdateForm.post(route('reports.updates.store', props.report.id), {
+        onSuccess: () => { reportUpdateForm.reset(); showReportUpdatesModal.value = false }
+    })
+}
 </script>
 
 <template>
@@ -113,8 +126,8 @@ const updateStatus = () => {
                                 </div>
                             </div>
                         </div>
-                        <div className="sticky top-0 z-10 flex h-16 items-center gap-4 bg-background px-4 md:px-6">
-                            <div className="ml-auto flex items-center gap-2">
+                        <div class="sticky top-0 z-10 flex h-16 items-center gap-4 bg-background px-4 md:px-6">
+                            <div class="ml-auto flex items-center gap-2">
                                 <AlertDialog v-model:open="showStatusUpdateModal">
                                     <AlertDialogTrigger as-child>
                                         <Button size="sm" :disabled="report.status.name === 'resolved'">Update
@@ -206,7 +219,57 @@ const updateStatus = () => {
                         </div>
                     </div>
                 </div>
-                <div className="w-full space-y-6">
+                <div class="w-full space-y-6">
+                    <Card class="w-full">
+                        <CardHeader class="pb-4">
+                            <div class="flex items-center gap-2">
+                                <FileText class="h-5 w-5 text-muted-foreground" />
+                                <CardTitle class="text-xl">Report Updates</CardTitle>
+                                <AlertDialog v-model:open="showReportUpdatesModal">
+                                    <AlertDialogTrigger as-child class="ml-auto">
+                                        <Button size="sm">Add Update</Button>
+                                    </AlertDialogTrigger>
+                                    <AlertDialogContent>
+                                        <AlertDialogHeader>
+                                            <AlertDialogTitle>Add new Update </AlertDialogTitle>
+                                        </AlertDialogHeader>
+                                        <div class="w-full">
+                                            <Textarea v-model:model-value="reportUpdateForm.text"
+                                                placeholder="update text" />
+                                            <h4 v-if="reportUpdateForm.errors.text">{{ reportUpdateForm.errors.text }}
+                                            </h4>
+                                        </div>
+                                        <AlertDialogFooter>
+                                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                            <Button :disabled="reportUpdateForm.text == ''"
+                                                @click="submitReportUpdatesFrom">Submit</Button>
+                                        </AlertDialogFooter>
+                                    </AlertDialogContent>
+                                </AlertDialog>
+                            </div>
+                            <CardDescription>Recent activity and changes</CardDescription>
+
+                        </CardHeader>
+                        <CardContent class="space-y-4">
+
+                            <div :key="update.id" v-for="(update, i) in report.updates">
+                                <div class="flex items-start gap-3">
+                                    <div class="flex-1 space-y-2">
+                                        <div class="flex items-center gap-2 flex-wrap">
+                                            <div class="flex items-center gap-1 text-sm text-muted-foreground">
+                                                <Clock class="h-3 w-3" />
+                                                <span>{{ formatDate(update.created_at) }}</span>
+                                            </div>
+                                        </div>
+                                        <p class="text-sm leading-relaxed">{{ update.text }}</p>
+                                    </div>
+                                </div>
+                                <Separator v-if="i < report.updates.length + 1" class="mt-4" />
+                            </div>
+                        </CardContent>
+                    </Card>
+                </div>
+                <div class="w-full space-y-6">
                     <Card>
                         <CardHeader>
                             <CardTitle>Location</CardTitle>
@@ -226,7 +289,7 @@ const updateStatus = () => {
                     </Card>
                 </div>
 
-                <div className="w-full space-y-6">
+                <div class="w-full space-y-6">
                     <Card>
                         <CardHeader>
                             <CardTitle>Images</CardTitle>

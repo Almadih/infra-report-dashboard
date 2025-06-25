@@ -59,4 +59,12 @@ class Report extends Model
     {
         return $this->hasMany(Image::class);
     }
+
+    /**
+     * Get all of the updates for the Report
+     */
+    public function updates(): HasMany
+    {
+        return $this->hasMany(Update::class)->orderBy('created_at', 'desc');
+    }
 }

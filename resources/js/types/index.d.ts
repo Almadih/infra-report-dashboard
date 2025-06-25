@@ -53,6 +53,7 @@ export interface Report {
     description: string;
     images: Image[];
     city: string;
+    updates: Update[];
 }
 
 type Image = {
@@ -105,6 +106,14 @@ export interface Link {
     label: string;
     active: boolean;
 }
+
+export type Update = {
+    id: number;
+    text: string;
+    report_id: string;
+    created_at: string;
+    updated_at: string;
+};
 
 export type ReportFilters = {
     severity: {

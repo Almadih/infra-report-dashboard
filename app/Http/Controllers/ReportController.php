@@ -86,7 +86,7 @@ class ReportController extends Controller
 
     public function show(Report $report)
     {
-        $report->load(['severity', 'status', 'damageType', 'images']);
+        $report->load(['severity', 'status', 'damageType', 'images', 'updates']);
 
         return Inertia::render('Reports/Show', [
             'report' => $report,
