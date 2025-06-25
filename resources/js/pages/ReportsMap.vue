@@ -23,7 +23,6 @@ type props = {
 
 const props = defineProps<props>();
 
-console.log(props.reports)
 
 const selectedReport = ref<Report | null>(null);
 
@@ -55,7 +54,6 @@ const filters = ref({
     },
 });
 
-console.log(props.filters);
 
 watch(
     props,
@@ -230,7 +228,7 @@ const breadcrumbs: BreadcrumbItem[] = [
                 <div class="relative flex-1">
                     <Map :center="center" :zoom="9" class="h-[calc(100vh-4rem)] w-full">
                         <GMapMarker :position="center">
-                            {{ center }}
+
                         </GMapMarker>
 
                         <GMapMarker @click="selectedReport = report" v-for="report in reports.data" :key="report.id"

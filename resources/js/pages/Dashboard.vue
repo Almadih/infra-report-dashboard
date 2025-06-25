@@ -46,6 +46,7 @@ const formatNumber = (num: number) => {
 </script>
 
 <template>
+
     <Head title="Dashboard" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
@@ -98,7 +99,8 @@ const formatNumber = (num: number) => {
                         <Card class="col-span-4">
                             <CardHeader>
                                 <CardTitle>Last 7 Days Reports Heatmap</CardTitle>
-                                <CardDescription> Heatmap of last 7 days reports showing the distribution and volume of reports. </CardDescription>
+                                <CardDescription> Heatmap of last 7 days reports showing the distribution and volume of
+                                    reports. </CardDescription>
                             </CardHeader>
                             <CardContent class="pl-2">
                                 <ReportsHeatMap />
@@ -127,28 +129,30 @@ const formatNumber = (num: number) => {
                                         <TableRow v-for="report in reports" :key="report.id">
                                             <TableCell class="font-medium">{{ report.id }}</TableCell>
                                             <TableCell>{{ report.damage_type.name }}</TableCell>
-                                            <TableCell>{{ report.address }}</TableCell>
+                                            <TableCell
+                                                class="break-words break-normal overflow-hidden whitespace-normal">{{
+                                                    report.address }}
+                                            </TableCell>
                                             <TableCell>
                                                 <Badge class="capitalize" :class="severityColors[report.severity.name]">
                                                     {{ report.severity.name.replace('_', ' ') }}
                                                 </Badge>
                                             </TableCell>
                                             <TableCell>
-                                                <Badge variant="outline" class="capitalize" :class="statusColors[report.status.name]"
-                                                    >{{ report.status.name.replace('_', ' ') }}
+                                                <Badge variant="outline" class="capitalize"
+                                                    :class="statusColors[report.status.name]">{{
+                                                        report.status.name.replace('_', ' ') }}
                                                 </Badge>
                                             </TableCell>
                                             <TableCell>
                                                 {{ formatDate(report.created_at) }}
                                             </TableCell>
                                             <TableCell class="text-right">
-                                                <Button
-                                                    @click="
-                                                        () => {
-                                                            router.get(route('reports.show', report.id));
-                                                        }
-                                                    "
-                                                >
+                                                <Button @click="
+                                                    () => {
+                                                        router.get(route('reports.show', report.id));
+                                                    }
+                                                ">
                                                     View
                                                 </Button>
                                             </TableCell>
