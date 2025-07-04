@@ -18,6 +18,32 @@ export interface NavItem {
     isActive?: boolean;
 }
 
+export interface ReportFlag {
+    id: number;
+    report_id: string;
+    type: 'duplicate' | 'low_quality';
+    duplicated_report_id?: string;
+    reason?: string;
+    created_at: string;
+    updated_at: string;
+    report: Report;
+    auto_flagged: boolean;
+    confirmed_by_admin: boolean;
+    duplicatedReport?: Report;
+}
+
+export interface ReputationHistory {
+    id: number;
+    report_id: string;
+    type: 'submit' | 'verify' | 'resolve' | 'low_quality' | 'duplicate';
+    user_id: number;
+    amount: number;
+    created_at: string;
+    updated_at: string;
+    user: User;
+    report: Report;
+}
+
 export interface SharedData extends PageProps {
     name: string;
     quote: { message: string; author: string };

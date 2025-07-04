@@ -11,6 +11,7 @@
     "require": {
         "php": "^8.2",
         "clickbar/laravel-magellan": "^2.0",
+        "google/cloud-vision": "^2.0",
         "inertiajs/inertia-laravel": "^2.0",
         "intervention/image-laravel": "^1.5",
         "laravel/framework": "^12.0",

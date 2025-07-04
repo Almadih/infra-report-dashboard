@@ -3,10 +3,13 @@
 namespace App\Http\Controllers\Users;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\CheckDuplicatedReportJob;
+use App\Jobs\CheckReportQualityJob;
 use App\Models\Report;
 use App\Models\Status;
 use App\Services\ReputationService;
 use Clickbar\Magellan\Data\Geometries\Point;
+use Clickbar\Magellan\Database\PostgisFunctions\ST;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -14,12 +17,17 @@ class ReportController extends Controller
 {
     public function index(Request $request)
     {
-        $lng = $request->query('lng');
-        $lat = $request->query('lat');
-        $radius = $request->query('radius');
+        $request->validate([
+            'lat' => ['required', 'numeric'],
+            'lng' => ['required', 'numeric'],
+            'radius' => ['required', 'numeric'], // in meters,
+        ]);
 
-        $reports = Report::with(['damageType', 'status', 'severity', 'images'])->whereRaw('ST_DWithin(location, ST_SetSRID(ST_MakePoint(?, ?), 4326), ?)',
-            [$lng, $lat, $radius / 111320.0])->get();
+        $centerPoint = Point::makeGeodetic($request->lat, $request->lng);
+
+        $reports = Report::with(['damageType', 'status', 'severity', 'images'])
+            ->where(ST::dWithinGeography('location', $centerPoint, $request->radius))
+            ->get();
 
         return response()->json($reports);
     }
@@ -57,6 +65,9 @@ class ReportController extends Controller
         }
 
         ReputationService::addReputationHistory($report, ReputationService::TYPE_SUBMIT);
+
+        CheckDuplicatedReportJob::dispatch($report);
+        CheckReportQualityJob::dispatch($report);
 
         return response()->json($report);
 

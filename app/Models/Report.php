@@ -75,4 +75,12 @@ class Report extends Model
     {
         return $this->hasMany(ReputationHistory::class);
     }
+
+    /**
+     * Get all of the flags for the Report
+     */
+    public function flags(): HasMany
+    {
+        return $this->hasMany(ReportFlag::class);
+    }
 }

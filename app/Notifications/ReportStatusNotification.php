@@ -6,7 +6,6 @@ use App\Models\Report;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
-use Str;
 
 class ReportStatusNotification extends Notification implements ShouldQueue
 {
@@ -15,9 +14,14 @@ class ReportStatusNotification extends Notification implements ShouldQueue
     /**
      * Create a new notification instance.
      */
+    private string $status;
+
+    private string $damageType;
+
     public function __construct(public Report $report)
     {
-        //
+        $this->status = $report->status->name;
+        $this->damageType = $report->damageType->name;
     }
 
     /**
@@ -33,11 +37,10 @@ class ReportStatusNotification extends Notification implements ShouldQueue
     // optional: you can use according to your requirement.
     public function toFCM()
     {
-        $status = Str::headline($this->report->status->name);
 
         return [
             'title' => 'Report Status updated',
-            'body' => "Report #{$this->report->id} status has been updated to {$status}",
+            'body' => "Report {$this->damageType} status has been updated to {$this->status}",
         ];
     }
 
@@ -57,11 +60,10 @@ class ReportStatusNotification extends Notification implements ShouldQueue
      */
     public function toArray(object $notifiable): array
     {
-        $status = Str::headline($this->report->status->name);
 
         return [
             'title' => 'Report Status updated',
-            'body' => "Report #{$this->report->id} status has been updated to {$status}",
+            'body' => "Report {$this->damageType} status has been updated to {$this->status}",
             'data' => [
                 'report_id' => $this->report->id,
             ],
