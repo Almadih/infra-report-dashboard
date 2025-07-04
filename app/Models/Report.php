@@ -67,4 +67,12 @@ class Report extends Model
     {
         return $this->hasMany(Update::class)->orderBy('created_at', 'desc');
     }
+
+    /**
+     * Get all of the reputationHistory for the Report
+     */
+    public function reputationHistory(): HasMany
+    {
+        return $this->hasMany(ReputationHistory::class);
+    }
 }

@@ -90,4 +90,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Report::class);
     }
+
+    public function reputationHistory(): HasMany
+    {
+        return $this->hasMany(ReputationHistory::class);
+    }
 }

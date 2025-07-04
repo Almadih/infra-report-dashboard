@@ -16,7 +16,7 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectVa
 import { Separator } from '@/components/ui/separator';
 import { Textarea } from '@/components/ui/textarea';
 import AppLayout from '@/layouts/AppLayout.vue';
-import { BreadcrumbItem, Report, Status, Update } from '@/types';
+import { BreadcrumbItem, Report, Status } from '@/types';
 import { formatDate, severityColors, statusColors } from '@/utils';
 import { Head, useForm } from '@inertiajs/vue3';
 import { Calendar, CheckCircle, Clock, Edit, FileText, MapPin, User } from 'lucide-vue-next';

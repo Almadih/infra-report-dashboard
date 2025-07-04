@@ -6,6 +6,7 @@ use App\Models\Report;
 use App\Models\Severity;
 use App\Models\Status;
 use App\Notifications\ReportStatusNotification;
+use App\Services\ReputationService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -101,9 +102,25 @@ class ReportController extends Controller
             'status_id' => ['required', 'exists:statuses,id'],
         ]);
 
+        $status = Status::find($validated['status_id']);
+        $reputationHistoryType = '';
+        switch ($status->name) {
+            case 'verified':
+                $reputationHistoryType = ReputationService::TYPE_VERIFIED;
+                break;
+            case 'resolved':
+                $reputationHistoryType = ReputationService::TYPE_RESOLVE;
+                break;
+            default:
+                break;
+        }
+
         $report->update([
             'status_id' => $validated['status_id'],
         ]);
+        if ($reputationHistoryType) {
+            ReputationService::addReputationHistory($report, $reputationHistoryType);
+        }
 
         $report->user->notify(new ReportStatusNotification($report));
 

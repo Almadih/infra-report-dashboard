@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Users;
 use App\Http\Controllers\Controller;
 use App\Models\Report;
 use App\Models\Status;
+use App\Services\ReputationService;
 use Clickbar\Magellan\Data\Geometries\Point;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -54,6 +55,8 @@ class ReportController extends Controller
                 'path' => $path,
             ]);
         }
+
+        ReputationService::addReputationHistory($report, ReputationService::TYPE_SUBMIT);
 
         return response()->json($report);
 
