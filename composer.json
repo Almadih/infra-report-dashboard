@@ -48,6 +48,7 @@
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
             "@php artisan package:discover --ansi"
         ],
+        "clear-cache": "php artisan cache:clear && php artisan config:clear && php artisan route:clear && php artisan view:clear",
         "post-update-cmd": [
             "@php artisan vendor:publish --tag=laravel-assets --ansi --force"
         ],
