@@ -26,7 +26,7 @@ class ReportController extends Controller
         $centerPoint = Point::makeGeodetic($request->lat, $request->lng);
 
         $reports = Report::with(['damageType', 'status', 'severity', 'images'])
-            ->where(ST::dWithinGeography('location', $centerPoint, $request->radius))
+            ->where(ST::dWithinGeography('location', $centerPoint, $request->radius), true)
             ->get();
 
         return response()->json($reports);
