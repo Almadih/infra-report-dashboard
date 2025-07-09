@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationNext, PaginationPrevious } from '@/components/ui/pagination';
@@ -10,13 +11,20 @@ import { BreadcrumbItem, ModelPagination, ReportFlag } from '@/types';
 import { formatDate } from '@/utils';
 import { Head, Link, router } from '@inertiajs/vue3';
 import { Bot, CheckCircle, Clock, ExternalLink, Eye, Filter, User } from 'lucide-vue-next';
+import { reactive, watch } from 'vue';
+import { pickBy, debounce } from 'lodash-es';
 
 
-
-type props = {
+type Props = {
     flags: ModelPagination<ReportFlag>;
+    // Add filters prop to receive initial state from Laravel
+    filters: {
+        status: string | null;
+        type: string | null;
+        flagged_by: string | null;
+    };
 };
-const props = defineProps<props>();
+const props = defineProps<Props>();
 const breadcrumbs: BreadcrumbItem[] = [
     {
         title: 'Reports Flags',
@@ -24,16 +32,58 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-const handlePageChange = (page: number) => {
+const filters = reactive({
+    status: props.filters.status || "all",
+    type: props.filters.type || "all",
+    flagged_by: props.filters.flagged_by || "all",
+});
+
+
+
+watch(filters, debounce(() => {
+    // Map frontend values to backend query params
+    const queryParams = {
+        'filter[confirmed_by_admin]': filters.status === 'confirmed' ? true : (filters.status === 'pending' ? false : undefined),
+        'filter[type]': filters.type !== 'all' ? filters.type : undefined,
+        'filter[auto_flagged]': filters.flagged_by === 'auto' ? true : (filters.flagged_by === 'manual' ? false : undefined),
+    };
+
+    // Use pickBy from lodash to remove any undefined filters
+    const cleanParams = pickBy(queryParams, (value: any) => value !== undefined);
 
     router.get(
         route('report-flags.index'),
-        { page },
+        cleanParams,
+        {
+            preserveState: true,
+            replace: true, // Avoids polluting browser history with filter changes
+        },
+    );
+}, 100));
+
+
+/**
+ * Handle pagination changes, preserving the current filters.
+ */
+const handlePageChange = (page: number) => {
+    const queryParams = {
+        'filter[confirmed_by_admin]': filters.status === 'confirmed' ? true : (filters.status === 'pending' ? false : undefined),
+        'filter[type]': filters.type !== 'all' ? filters.type : undefined,
+        'filter[auto_flagged]': filters.flagged_by === 'auto' ? true : (filters.flagged_by === 'manual' ? false : undefined),
+        page,
+    };
+
+    const cleanParams = pickBy(queryParams, (value: any) => value !== undefined);
+
+    router.get(
+        route('report-flags.index'),
+        cleanParams,
         {
             preserveState: true,
         },
     );
 };
+
 
 </script>
 
@@ -59,10 +109,11 @@ const handlePageChange = (page: number) => {
                     <CardDescription>Filter and search through flagged reports</CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <div class="grid grid-cols-3 gap-4">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div class="space-y-2">
-                            <Label htmlFor="status">Status</Label>
-                            <Select value={statusFilter} onValueChange={setStatusFilter}>
+                            <Label for="status">Status</Label>
+                            <!-- Use v-model for two-way data binding -->
+                            <Select v-model="filters.status" id="status">
                                 <SelectTrigger class="w-full">
                                     <SelectValue placeholder="Select status" />
                                 </SelectTrigger>
@@ -74,13 +125,29 @@ const handlePageChange = (page: number) => {
                             </Select>
                         </div>
                         <div class="space-y-2">
-                            <Label htmlFor="type">Type</Label>
-                            <Select value={typeFilter} onValueChange={setTypeFilter}>
+                            <Label for="type">Type</Label>
+                            <Select v-model="filters.type" id="type">
                                 <SelectTrigger class="w-full">
                                     <SelectValue placeholder="Select type" />
                                 </SelectTrigger>
                                 <SelectContent>
                                     <SelectItem value="all">All Types</SelectItem>
+                                    <SelectItem value="low_quality">Low Quality</SelectItem>
+                                    <SelectItem value="duplicate">Duplicate</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
+                        <div class="space-y-2">
+                            <Label for="flagged_by">Flagged By</Label>
+                            <!-- Corrected SelectItem values to be more logical -->
+                            <Select v-model="filters.flagged_by" id="flagged_by">
+                                <SelectTrigger class="w-full">
+                                    <SelectValue placeholder="Select who flagged" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="all">All</SelectItem>
+                                    <SelectItem value="auto">Auto</SelectItem>
+                                    <SelectItem value="manual">Manual</SelectItem>
                                 </SelectContent>
                             </Select>
                         </div>
@@ -90,7 +157,7 @@ const handlePageChange = (page: number) => {
 
             <div class="mb-4">
                 <p class="text-sm text-muted-foreground">
-                    Showing {filteredFlags.length} of {flagsData.length} flags
+                    Showing {{ flags.data.length }} of {{ flags.total }} flags
                 </p>
             </div>
 
@@ -173,12 +240,15 @@ const handlePageChange = (page: number) => {
 
                                 </TableCell>
                                 <TableCell class="text-right">
-                                    <Link :href="route('report-flags.show', flag.id)"
-                                        class="flex items-center justify-end">
-                                    <Eye class="mr-2 h-4 w-4" />
-                                    View Details
-                                    </Link>
+                                    <Button asChild variant="outline">
 
+                                        <Link :href="route('report-flags.show', flag.id)"
+                                            class="flex items-center justify-end">
+                                        <Eye class=" h-4 w-4" />
+                                        View Details
+                                        </Link>
+
+                                    </Button>
                                 </TableCell>
                             </TableRow>
 

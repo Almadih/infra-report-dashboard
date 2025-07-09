@@ -12,18 +12,20 @@ import {
 import { Badge } from '@/components/ui/badge';
 import Button from '@/components/ui/button/Button.vue';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
 import { Textarea } from '@/components/ui/textarea';
 import AppLayout from '@/layouts/AppLayout.vue';
-import { BreadcrumbItem, Report, Status } from '@/types';
+import { BreadcrumbItem, Report, ReportFlag, Status } from '@/types';
 import { formatDate, severityColors, statusColors } from '@/utils';
-import { Head, useForm } from '@inertiajs/vue3';
-import { Calendar, CheckCircle, Clock, Edit, FileText, MapPin, User } from 'lucide-vue-next';
+import { Head, Link, useForm } from '@inertiajs/vue3';
+import { AlertTriangle, Bot, Calendar, CheckCircle, Clock, Edit, Eye, FileText, Flag, MapPin, User } from 'lucide-vue-next';
 import { onMounted, ref, watch } from 'vue';
 
 type props = {
-    report: Report;
+    report: Report & { flags: ReportFlag[] };
     statuses: Status[];
 };
 
@@ -42,6 +44,8 @@ const breadcrumbs: BreadcrumbItem[] = [
 const statuses = ref<Status[]>([]);
 const showStatusUpdateModal = ref(false);
 const showReportUpdatesModal = ref(false);
+const showAddFlagModal = ref(false);
+
 
 const form = useForm<StatusForm>({
     status_id: '',
@@ -49,6 +53,14 @@ const form = useForm<StatusForm>({
 
 const reportUpdateForm = useForm({
     text: ''
+});
+
+
+const flagForm = useForm({
+    report_id: props.report.id,
+    type: '' as 'duplicate' | 'low_quality' | '',
+    duplicated_report_id: '',
+    reason: '',
 });
 
 const statusIcons = {
@@ -102,6 +114,16 @@ const submitReportUpdatesFrom = () => {
         onSuccess: () => { reportUpdateForm.reset(); showReportUpdatesModal.value = false }
     })
 }
+
+
+const submitFlag = () => {
+    flagForm.post(route('report-flags.store'), {
+        onSuccess: () => {
+            flagForm.reset();
+            showAddFlagModal.value = false;
+        },
+    });
+};
 </script>
 
 <template>
@@ -265,6 +287,133 @@ const submitReportUpdatesFrom = () => {
                                     </div>
                                 </div>
                                 <Separator v-if="i < report.updates.length + 1" class="mt-4" />
+                            </div>
+                        </CardContent>
+                    </Card>
+                </div>
+                <div class="w-full space-y-6">
+                    <Card>
+                        <CardHeader class="flex flex-row items-center justify-between pb-4">
+                            <div class="flex items-center gap-2">
+                                <Flag class="h-5 w-5 text-muted-foreground" />
+                                <CardTitle class="text-xl">Flags</CardTitle>
+                            </div>
+                            <AlertDialog v-model:open="showAddFlagModal">
+                                <AlertDialogTrigger as-child>
+                                    <Button variant="destructive" size="sm">
+                                        <AlertTriangle class="mr-2 h-4 w-4" />
+                                        Add Flag
+                                    </Button>
+                                </AlertDialogTrigger>
+                                <AlertDialogContent>
+                                    <AlertDialogHeader>
+                                        <AlertDialogTitle>Flag Report #{{ report.id }}</AlertDialogTitle>
+                                    </AlertDialogHeader>
+                                    <div class="grid gap-4 py-4">
+                                        <div class="grid grid-cols-4 items-center gap-4">
+                                            <Label for="flag-type" class="text-right">Type</Label>
+                                            <div class="col-span-3">
+                                                <Select v-model="flagForm.type">
+                                                    <SelectTrigger class="w-full">
+                                                        <SelectValue placeholder="Select a flag type" class="w-full" />
+                                                    </SelectTrigger>
+                                                    <SelectContent>
+                                                        <SelectItem value="low_quality">Low Quality</SelectItem>
+                                                        <SelectItem value="duplicate">Duplicate</SelectItem>
+                                                    </SelectContent>
+                                                </Select>
+                                                <p v-if="flagForm.errors.type" class="pt-1 text-sm text-red-600">{{
+                                                    flagForm.errors.type }}</p>
+                                            </div>
+                                        </div>
+                                        <div v-if="flagForm.type === 'duplicate'"
+                                            class="grid grid-cols-4 items-center gap-4">
+                                            <Label for="duplicated-report-id" class="text-right">Original ID</Label>
+                                            <div class="col-span-3">
+                                                <Input id="duplicated-report-id" v-model="flagForm.duplicated_report_id"
+                                                    placeholder="Enter original report ID" />
+                                                <p v-if="flagForm.errors.duplicated_report_id"
+                                                    class="pt-1 text-sm text-red-600">{{
+                                                        flagForm.errors.duplicated_report_id }}</p>
+                                            </div>
+                                        </div>
+                                        <div class="grid grid-cols-4 items-start gap-4">
+                                            <Label for="reason" class="pt-2 text-right">Reason</Label>
+                                            <div class="col-span-3">
+                                                <Textarea id="reason" v-model="flagForm.reason"
+                                                    placeholder="Provide a reason for the flag (optional for duplicates)." />
+                                                <p v-if="flagForm.errors.reason" class="pt-1 text-sm text-red-600">{{
+                                                    flagForm.errors.reason }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <AlertDialogFooter>
+                                        <AlertDialogCancel @click="flagForm.reset()">Cancel</AlertDialogCancel>
+                                        <Button @click="submitFlag"
+                                            :disabled="flagForm.processing || !flagForm.type">Submit Flag</Button>
+                                    </AlertDialogFooter>
+                                </AlertDialogContent>
+                            </AlertDialog>
+                        </CardHeader>
+
+                        <CardContent class="space-y-4">
+                            <div v-if="report.flags && report.flags.length > 0">
+                                <div v-for="(flag, index) in report.flags" :key="flag.id">
+                                    <div class="grid gap-2">
+                                        <div class="flex flex-wrap items-center justify-between gap-2">
+                                            <div class="flex items-center gap-2">
+                                                <Badge variant="secondary" class="capitalize">{{ flag.type.replace('_',
+                                                    ' ') }}</Badge>
+                                                <div class="text-sm text-muted-foreground">
+                                                    Flagged on {{ formatDate(flag.created_at) }}
+                                                </div>
+                                            </div>
+                                            <div class="flex items-center gap-2">
+
+                                                <div v-if="flag.auto_flagged"
+                                                    class="flex items-center text-sm text-muted-foreground">
+                                                    <Bot class="w-4 h-4 mr-1" />
+                                                    Auto flagged
+                                                </div>
+
+                                                <div v-else class="flex items-center text-sm text-muted-foreground">
+                                                    <User class="w-4 h-4 mr-1" />
+                                                    Manually flagged
+                                                </div>
+                                                <Badge v-if="flag.confirmed_by_admin" variant="default"
+                                                    class="bg-green-100 text-green-800 border-green-200">
+                                                    <CheckCircle class="w-3 h-3 mr-1" />
+                                                    Confirmed by Admin
+                                                </Badge>
+                                                <Badge v-else variant="secondary"
+                                                    class="bg-yellow-100 text-yellow-800 border-yellow-200">
+                                                    <Clock class="w-3 h-3 mr-1" />
+                                                    Pending Review
+                                                </Badge>
+                                            </div>
+                                        </div>
+                                        <p v-if="flag.reason" class="text-sm text-muted-foreground">{{ flag.reason }}
+                                        </p>
+                                        <div v-if="flag.type === 'duplicate' && flag.duplicated_report_id">
+                                            <p class="text-sm">
+                                                Marked as a duplicate of report:
+                                                <Link :href="route('reports.show', flag.duplicated_report_id)"
+                                                    class="font-semibold text-primary underline hover:no-underline">#{{
+                                                        flag.duplicated_report_id }}</Link>
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <Button asChild variant="outline">
+                                        <Link :href="route('report-flags.show', flag.id)">
+                                        <Eye class="w-3 h-3" />
+                                        View Details
+                                        </Link>
+                                    </Button>
+                                    <Separator v-if="index < report.flags.length - 1" class="my-4" />
+                                </div>
+                            </div>
+                            <div v-else class="py-4 text-center text-muted-foreground">
+                                No flags have been added to this report.
                             </div>
                         </CardContent>
                     </Card>

@@ -37,6 +37,7 @@ class ReportController extends Controller
             return filter_var($filters[$severity], FILTER_VALIDATE_BOOLEAN);
         });
 
+        dd(Severity::whereIn('name', $activeSeverityFilter)->pluck('id'));
         $query->whereIn('severity_id', Severity::whereIn('name', $activeSeverityFilter)->pluck('id'));
 
         // Filter by status
@@ -87,7 +88,7 @@ class ReportController extends Controller
 
     public function show(Report $report)
     {
-        $report->load(['severity', 'status', 'damageType', 'images', 'updates']);
+        $report->load(['severity', 'status', 'damageType', 'images', 'updates', 'flags']);
 
         return Inertia::render('Reports/Show', [
             'report' => $report,
