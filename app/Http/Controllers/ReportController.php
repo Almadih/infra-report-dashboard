@@ -37,7 +37,6 @@ class ReportController extends Controller
             return filter_var($filters[$severity], FILTER_VALIDATE_BOOLEAN);
         });
 
-        dd(Severity::whereIn('name', $activeSeverityFilter)->pluck('id'));
         $query->whereIn('severity_id', Severity::whereIn('name', $activeSeverityFilter)->pluck('id'));
 
         // Filter by status
@@ -46,8 +45,6 @@ class ReportController extends Controller
         });
 
         $query->whereIn('status_id', Status::whereIn('name', $activeStatusFilter)->pluck('id'));
-
-        // dd($filters);
 
         // Date range filter
         if ($filters['date_start']) {

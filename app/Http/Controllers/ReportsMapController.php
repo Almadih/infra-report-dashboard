@@ -30,8 +30,6 @@ class ReportsMapController extends Controller
 
         $filters = array_merge($defaultFilters, $request->only(array_keys($defaultFilters)));
 
-        // dd($filters);
-
         $query = Report::query();
 
         // Filter by severity
@@ -47,8 +45,6 @@ class ReportsMapController extends Controller
         });
 
         $query->whereIn('status_id', Status::whereIn('name', $activeStatusFilter)->pluck('id'));
-
-        // dd($filters);
 
         // Date range filter
         if ($filters['date_start']) {
@@ -66,8 +62,6 @@ class ReportsMapController extends Controller
             ->selectRaw('ST_AsGeoJSON(ST_Centroid(ST_Collect(ST_Transform(location, 4326)))) AS center')
             ->whereIn('id', $ids)
             ->first();
-
-        // dd($filters);
 
         // Reconstruct nested filters to send to Vue
         $nestedFilters = [
