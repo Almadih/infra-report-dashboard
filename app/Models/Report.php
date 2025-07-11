@@ -65,7 +65,7 @@ class Report extends Model
      */
     public function updates(): HasMany
     {
-        return $this->hasMany(Update::class)->orderBy('created_at', 'desc');
+        return $this->hasMany(Update::class)->latest();
     }
 
     /**
@@ -81,6 +81,6 @@ class Report extends Model
      */
     public function flags(): HasMany
     {
-        return $this->hasMany(ReportFlag::class);
+        return $this->hasMany(ReportFlag::class)->latest();
     }
 }

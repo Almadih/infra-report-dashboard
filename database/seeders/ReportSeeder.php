@@ -18,7 +18,7 @@ class ReportSeeder extends Seeder
      */
     public function run(): void
     {
-        for ($i = 0; $i <= 1; $i++) {
+        for ($i = 0; $i <= 5; $i++) {
             error_log($i);
             $report = Report::factory()->create([
                 'severity_id' => Severity::inRandomOrder()->first()->id,

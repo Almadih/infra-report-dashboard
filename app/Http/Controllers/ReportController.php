@@ -54,7 +54,7 @@ class ReportController extends Controller
             $query->whereDate('created_at', '<=', $filters['date_end']);
         }
 
-        $items = $query->with(['damageType', 'severity', 'status'])->paginate(50);
+        $items = $query->with(['damageType', 'severity', 'status'])->latest()->paginate(50);
 
         // Reconstruct nested filters to send to Vue
         $nestedFilters = [
