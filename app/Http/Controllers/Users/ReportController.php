@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Users;
 
 use App\Http\Controllers\Controller;
+use App\Http\Middleware\ActiveUserMiddleware;
 use App\Jobs\CheckDuplicatedReportJob;
 use App\Jobs\CheckReportQualityJob;
 use App\Models\Report;
@@ -11,10 +12,19 @@ use App\Services\ReputationService;
 use Clickbar\Magellan\Data\Geometries\Point;
 use Clickbar\Magellan\Database\PostgisFunctions\ST;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Facades\Auth;
 
-class ReportController extends Controller
+class ReportController extends Controller implements HasMiddleware
 {
+    public static function middleware(): array
+    {
+        return [
+            new Middleware(ActiveUserMiddleware::class, only: ['store']),
+        ];
+    }
+
     public function index(Request $request)
     {
         $request->validate([
