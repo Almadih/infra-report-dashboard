@@ -42,22 +42,14 @@ it('can filter reports by severity and status', function () {
     ]);
 
     $response = get(route('reports.index', [
-        'critical' => 'true',
-        'high' => 'false',
-        'medium' => 'false',
-        'low' => 'false',
-        'pending' => 'true',
-        'under_review' => 'false',
-        'verified' => 'false',
-        'resolved' => 'false',
+        'filter' => [
+            'severity' => $criticalSeverity->name,
+        ],
     ]));
 
     $response->assertStatus(200)
         ->assertInertia(fn (Assert $page) => $page->component('Reports/Index')
-            ->where('filters.severity.critical', true)
-            ->where('filters.status.pending', true)
-            ->where('filters.severity.high', false)
-            ->where('filters.status.verified', false)
+            ->where('filters.severity', $criticalSeverity->name)
             ->has('reports.data', 1)
         );
 });

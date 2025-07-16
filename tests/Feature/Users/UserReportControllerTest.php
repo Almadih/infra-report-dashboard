@@ -23,6 +23,7 @@ beforeEach(function () {
 
     $user = User::factory()->create([
         'is_anonymous' => true,
+        'is_active' => true,
     ]);
     $this->actingAs($user, 'sanctum');
 

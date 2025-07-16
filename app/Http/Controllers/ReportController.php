@@ -74,9 +74,9 @@ class ReportController extends Controller
                 break;
         }
 
-        // $report->update([
-        //     'status_id' => $validated['status_id'],
-        // ]);
+        $report->update([
+            'status_id' => $validated['status_id'],
+        ]);
         if ($reputationHistoryType) {
             ReputationService::addReputationHistory($report, $reputationHistoryType);
         }

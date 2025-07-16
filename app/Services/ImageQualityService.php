@@ -23,6 +23,10 @@ class ImageQualityService
     public function isLowQuality(Image $image): bool
     {
         $file = Storage::path($image->path);
+
+        if (! file_exists($file)) {
+            return true;
+        }
         // 1. Check file size
         $dimensions = getimagesize($file);
 
