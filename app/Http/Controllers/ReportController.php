@@ -18,7 +18,6 @@ class ReportController extends Controller
     public function index(Request $request)
     {
 
-        // dd($request->input('filter'));
         $reports = QueryBuilder::for(Report::class)
             ->allowedFilters([
                 AllowedFilter::custom('status', new FilterRelationIn('status', 'name')),
@@ -33,8 +32,6 @@ class ReportController extends Controller
             ->paginate()
             ->withQueryString();
 
-        // dd($request->input('filters'));
-        // Reconstruct nested filters to send to Vue
         $nestedFilters = [
             'severity' => $request->input('filter.severity'),
             'status' => $request->input('filter.status'),
@@ -49,7 +46,7 @@ class ReportController extends Controller
 
     public function show(Report $report)
     {
-        $report->load(['severity', 'status', 'damageType', 'images', 'updates', 'flags']);
+        $report->load(['severity', 'status', 'damageType', 'images', 'updates', 'flags', 'user']);
 
         return Inertia::render('Reports/Show', [
             'report' => $report,

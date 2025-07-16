@@ -97,9 +97,8 @@ const statusIcons = {
                     {{ formatDate(report.created_at) }}
                 </TableCell>
                 <TableCell class="text-right">
-                    <Button variant="outline">
+                    <Button>
                         <Link :href="route('reports.show', report.id)" class="flex items-center justify-end">
-
                         View Details
                         </Link>
                         <Eye class="w-3 h-3" />

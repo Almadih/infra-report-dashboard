@@ -21,7 +21,7 @@ import AppLayout from '@/layouts/AppLayout.vue';
 import { BreadcrumbItem, Report, ReportFlag, Status } from '@/types';
 import { formatDate, severityColors, statusColors } from '@/utils';
 import { Head, Link, useForm } from '@inertiajs/vue3';
-import { AlertTriangle, Bot, Calendar, CheckCircle, Clock, Edit, Eye, FileText, Flag, MapPin, User } from 'lucide-vue-next';
+import { AlertTriangle, Bot, Calendar, CheckCircle, Clock, Edit, ExternalLink, Eye, FileText, Flag, MapPin, User } from 'lucide-vue-next';
 import { onMounted, ref, watch } from 'vue';
 
 type props = {
@@ -229,6 +229,17 @@ const submitFlag = () => {
                                     <div>
                                         <dt class="text-muted-foreground text-sm font-medium">Address</dt>
                                         <dd class="text-sm">{{ report.address }}</dd>
+                                    </div>
+                                    <div>
+                                        <dt class="text-muted-foreground text-sm font-medium">User</dt>
+                                        <Link :href="route('users.show', report.user?.id)"
+                                            class="text-blue-600 hover:text-blue-800">
+                                        <span class="flex items-center gap-1">
+
+                                            <dd class="text-sm">{{ report.user?.name }}</dd>
+                                            <ExternalLink class="w-3 h-3" />
+                                        </span>
+                                        </Link>
                                     </div>
                                 </dl>
                             </CardContent>

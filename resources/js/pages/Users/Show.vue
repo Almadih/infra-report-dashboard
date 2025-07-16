@@ -23,6 +23,7 @@ import AppLayout from '@/layouts/AppLayout.vue'
 import { BreadcrumbItem, ModelPagination as ModelPaginationType, ReputationHistory, User as UserType } from '@/types'
 import { formatDate } from '@/utils'
 import ModelPagination from '@/components/ModelPagination.vue'
+import { Button } from '@/components/ui/button'
 
 // --- In a real Inertia app, you would receive props from the controller ---
 const props = defineProps<{
@@ -81,9 +82,20 @@ const handlePageChange = (page: number) => {
                 <!-- User Profile Card -->
                 <Card>
                     <CardHeader>
-                        <CardTitle class="flex items-center gap-2">
-                            <User class="w-5 h-5" />
-                            User Profile
+                        <CardTitle class="flex items-center justify-between">
+                            <div class="flex items-center gap-2 ">
+                                <span class="flex gap-1 items-center">
+                                    <User class="w-5 h-5" />
+                                    User Profile
+                                </span>
+
+                            </div>
+                            <Button>
+                                <Link :href="route('users.reports', user.id)" class="flex items-center gap-2">
+                                View Reports
+                                <ExternalLink class="w-4 h-4" />
+                                </Link>
+                            </Button>
                         </CardTitle>
                     </CardHeader>
                     <CardContent>

@@ -56,6 +56,7 @@ class User extends Authenticatable
         'device_id',
         'is_anonymous',
         'show_info_to_public',
+        'is_active',
     ];
 
     /**

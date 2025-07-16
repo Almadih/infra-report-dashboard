@@ -238,8 +238,8 @@ const handlePageChange = (page: number) => {
 
                                         <Link :href="route('report-flags.show', flag.id)"
                                             class="flex items-center justify-end">
-                                        <Eye class=" h-4 w-4" />
                                         View Details
+                                        <Eye class=" h-4 w-4" />
                                         </Link>
 
                                     </Button>
