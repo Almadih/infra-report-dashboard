@@ -7,6 +7,7 @@ use App\Http\Controllers\ReportFlagController;
 use App\Http\Controllers\ReportsHeatmapController;
 use App\Http\Controllers\ReportsMapController;
 use App\Http\Controllers\StoreReportUpdateController;
+use App\Http\Controllers\UserController;
 use App\Http\Middleware\NotAnonUser;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -22,6 +23,7 @@ Route::middleware(['auth', NotAnonUser::class])->group(function () {
     Route::resource('reports', ReportController::class)->only(['index', 'show', 'update']);
     Route::post('/reports/{report}/updates', StoreReportUpdateController::class)->name('reports.updates.store');
     Route::resource('report-flags', ReportFlagController::class)->except(['edit']);
+    Route::resource('users', UserController::class)->only(['index', 'show']);
 });
 
 Route::get('/image/{image}', ImageController::class)->middleware('auth:sanctum')->name('images.show');

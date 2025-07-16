@@ -3,20 +3,20 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
-import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationNext, PaginationPrevious } from '@/components/ui/pagination';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import AppLayout from '@/layouts/AppLayout.vue';
-import { BreadcrumbItem, ModelPagination, ReportFlag } from '@/types';
+import { BreadcrumbItem, ModelPagination as ModelPaginationType, ReportFlag } from '@/types';
 import { formatDate } from '@/utils';
 import { Head, Link, router } from '@inertiajs/vue3';
 import { Bot, CheckCircle, Clock, ExternalLink, Eye, Filter, User } from 'lucide-vue-next';
 import { reactive, watch } from 'vue';
 import { pickBy, debounce } from 'lodash-es';
+import ModelPagination from '@/components/ModelPagination.vue';
 
 
 type Props = {
-    flags: ModelPagination<ReportFlag>;
+    flags: ModelPaginationType<ReportFlag>;
     // Add filters prop to receive initial state from Laravel
     filters: {
         status: string | null;
@@ -28,7 +28,7 @@ const props = defineProps<Props>();
 const breadcrumbs: BreadcrumbItem[] = [
     {
         title: 'Reports Flags',
-        href: '/report-flags',
+        href: route('report-flags.index'),
     },
 ];
 
@@ -155,12 +155,6 @@ const handlePageChange = (page: number) => {
                 </CardContent>
             </Card>
 
-            <div class="mb-4">
-                <p class="text-sm text-muted-foreground">
-                    Showing {{ flags.data.length }} of {{ flags.total }} flags
-                </p>
-            </div>
-
             <Card>
                 <CardContent class="p-0">
                     <Table>
@@ -254,26 +248,7 @@ const handlePageChange = (page: number) => {
 
                         </TableBody>
                     </Table>
-                    <div class="mt-4">
-                        <Pagination v-slot="{ page }" :items-per-page="flags.per_page" :total="flags.total"
-                            :default-page="1" :siblingCount="1" @update:page="handlePageChange">
-                            <PaginationContent v-slot="{ items }">
-                                <PaginationPrevious />
-
-                                <template v-for="(item, index) in items" :key="index">
-                                    <PaginationItem v-if="item.type === 'page'" :value="item.value"
-                                        :is-active="item.value === page">
-                                        {{ item.value }}
-                                    </PaginationItem>
-                                </template>
-
-                                <PaginationEllipsis :index="10" />
-
-                                <PaginationNext />
-                            </PaginationContent>
-                        </Pagination>
-
-                    </div>
+                    <ModelPagination :model="flags" @update:page="handlePageChange" />
                 </CardContent>
             </Card>
 

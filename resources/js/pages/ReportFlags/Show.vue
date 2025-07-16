@@ -47,8 +47,12 @@ const confirmForm = useForm({
 })
 const breadcrumbs: BreadcrumbItem[] = [
     {
+        title: 'Reports',
+        href: route('reports.index'),
+    },
+    {
         title: 'Report Flag Details',
-        href: '/report-flags',
+        href: route('report-flags.show', props.flag.id),
     },
 ];
 
@@ -251,7 +255,7 @@ const handleConfirmFlag = () => {
                         <div>
                             <Label class="text-sm font-medium text-muted-foreground">Reason</Label>
                             <p class="text-sm mt-1 p-3 bg-muted rounded-md">{{ flag.reason || "No reason provided"
-                                }}
+                            }}
                             </p>
                         </div>
                     </CardContent>

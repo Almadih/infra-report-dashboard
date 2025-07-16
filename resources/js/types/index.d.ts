@@ -58,6 +58,8 @@ export interface User {
     email: string;
     avatar?: string;
     email_verified_at: string | null;
+    reputation: number;
+    is_active: boolean;
     created_at: string;
     updated_at: string;
 }
@@ -142,23 +144,10 @@ export type Update = {
 };
 
 export type ReportFilters = {
-    severity: {
-        critical: boolean;
-        high: boolean;
-        medium: boolean;
-        low: boolean;
-    };
-    status: {
-        pending: boolean;
-        under_review: boolean;
-        verified: boolean;
-        resolved: boolean;
-    };
+    severity: string;
+    status: string;
     location: string;
-    date: {
-        start: string;
-        end: string;
-    };
+    date: string;
 };
 
 export type BreadcrumbItemType = BreadcrumbItem;

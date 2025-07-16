@@ -1,62 +1,53 @@
 <script setup lang="ts">
 import DateRangeFilter from '@/components/DateRangeFilter.vue';
+import ModelPagination from '@/components/ModelPagination.vue';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import {
-    DropdownMenu,
-    DropdownMenuCheckboxItem,
-    DropdownMenuContent,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationNext, PaginationPrevious } from '@/components/ui/pagination';
+import CardDescription from '@/components/ui/card/CardDescription.vue';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import AppLayout from '@/layouts/AppLayout.vue';
-import { BreadcrumbItem, ModelPagination, Report, ReportFilters } from '@/types';
-import { flattenFilters, formatDate, severityColors, statusColors } from '@/utils';
+import { BreadcrumbItem, ModelPagination as ModelPaginationType, Report, ReportFilters } from '@/types';
+import { formatDate, severityColors, statusColors } from '@/utils';
 import { Head, router } from '@inertiajs/vue3';
-import { ChevronDown } from 'lucide-vue-next';
+import { pickBy } from 'lodash-es';
+import { Filter } from 'lucide-vue-next';
 import { ref, watch } from 'vue';
 
 type props = {
-    reports: ModelPagination<Report>;
+    reports: ModelPaginationType<Report>;
     filters: ReportFilters;
 };
 const props = defineProps<props>();
 const breadcrumbs: BreadcrumbItem[] = [
     {
         title: 'Reports',
-        href: '/reports',
+        href: route('reports.index'),
     },
 ];
 
-const filters = ref({
-    severity: {
-        critical: props.filters?.severity?.critical ?? true,
-        high: props.filters?.severity?.high ?? true,
-        medium: props.filters?.severity?.medium ?? true,
-        low: props.filters?.severity?.low ?? true,
-    },
-    status: {
-        pending: props.filters?.status?.pending ?? true,
-        under_review: props.filters?.status?.under_review ?? true,
-        verified: props.filters?.status?.verified ?? true,
-        resolved: props.filters?.status?.resolved ?? true,
-    },
-    location: props.filters?.location ?? '',
-    date: {
-        start: props.filters?.date?.start ?? '',
-        end: props.filters?.date?.end ?? '',
-    },
+const filtersValues = ref({
+    severity: props.filters?.severity ? props.filters.severity.split(',') : [],
+    status: props.filters?.status ? props.filters.status.split(',') : [],
+
+    date: props.filters?.date ? { start: props.filters.date.split(',')[0], end: props.filters.date.split(',')[1] } : { start: '', end: '' },
 });
 
 watch(
-    filters,
-    (newFilters) => {
-        const query = flattenFilters(newFilters);
-        router.get(route('reports.index'), query, {
+    filtersValues,
+    (filters) => {
+        const queryParams = {
+            'filter[status]': filters.status.join(','),
+            'filter[severity]': filters.severity.join(','),
+            'filter[date]': filters.date.start != '' ? `${filters.date.start},${filters.date.end}` : '',
+
+        };
+
+        const cleanParams = pickBy(queryParams, (value: any) => value !== '');
+
+        router.get(route('reports.index'), cleanParams, {
             preserveState: true,
             replace: true,
         });
@@ -65,11 +56,18 @@ watch(
 );
 
 const handlePageChange = (page: number) => {
-    const query = flattenFilters(filters.value);
+    const queryParams = {
+        'filter[status]': filtersValues.value.status.join(','),
+        'filter[severity]': filtersValues.value.severity.join(','),
+        'filter[date]': filtersValues.value.date,
+        page
+    };
+
+    const cleanParams = pickBy(queryParams, (value: any) => value !== '');
 
     router.get(
         route('reports.index'),
-        { page, ...query },
+        cleanParams,
         {
             preserveState: true,
         },
@@ -78,93 +76,71 @@ const handlePageChange = (page: number) => {
 </script>
 
 <template>
+
     <Head title="Reports" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
-        <div class="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
-            <div class="flex gap-4">
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <Button variant="outline" class="h-8 gap-1">
-                            <span>Status</span>
-                            <ChevronDown class="h-3.5 w-3.5" />
-                        </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                        <DropdownMenuLabel>Status</DropdownMenuLabel>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuCheckboxItem
-                            :model-value="filters.status.pending"
-                            @update:model-value="() => (filters.status.pending = !filters.status.pending)"
-                        >
-                            Pending
-                        </DropdownMenuCheckboxItem>
-                        <DropdownMenuCheckboxItem
-                            :model-value="filters.status.under_review"
-                            @update:model-value="() => (filters.status.under_review = !filters.status.under_review)"
-                        >
-                            Under Review
-                        </DropdownMenuCheckboxItem>
-                        <DropdownMenuCheckboxItem
-                            :model-value="filters.status.verified"
-                            @update:model-value="() => (filters.status.verified = !filters.status.verified)"
-                        >
-                            Verified
-                        </DropdownMenuCheckboxItem>
-                        <DropdownMenuCheckboxItem
-                            :model-value="filters.status.resolved"
-                            @update:model-value="() => (filters.status.resolved = !filters.status.resolved)"
-                        >
-                            Resolved
-                        </DropdownMenuCheckboxItem>
-                    </DropdownMenuContent>
-                </DropdownMenu>
-
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <Button variant="outline" class="h-8 gap-1">
-                            <span>Severity</span>
-                            <ChevronDown class="h-3.5 w-3.5" />
-                        </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                        <DropdownMenuLabel>Severity</DropdownMenuLabel>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuCheckboxItem
-                            :model-value="filters.severity.critical"
-                            @update:model-value="() => (filters.severity.critical = !filters.severity.critical)"
-                        >
-                            Critical
-                        </DropdownMenuCheckboxItem>
-                        <DropdownMenuCheckboxItem
-                            :model-value="filters.severity.high"
-                            @update:model-value="() => (filters.severity.high = !filters.severity.high)"
-                        >
-                            High
-                        </DropdownMenuCheckboxItem>
-                        <DropdownMenuCheckboxItem
-                            :model-value="filters.severity.medium"
-                            @update:model-value="() => (filters.severity.medium = !filters.severity.medium)"
-                        >
-                            Medium
-                        </DropdownMenuCheckboxItem>
-                        <DropdownMenuCheckboxItem
-                            :model-value="filters.severity.low"
-                            @update:model-value="() => (filters.severity.low = !filters.severity.low)"
-                        >
-                            Low
-                        </DropdownMenuCheckboxItem>
-                    </DropdownMenuContent>
-                </DropdownMenu>
-
-                <div class="space-y-2">
-                    <DateRangeFilter :isFullWidth="true" @update:range="(range) => (filters.date = range)" />
-                </div>
+        <div class="container mx-auto p-6">
+            <div class="mb-6">
+                <h1 class="text-3xl font-bold mb-2">Reports</h1>
+                <p class="text-muted-foreground">Manage and review all reports</p>
             </div>
-            <Card>
+
+
+            <Card class="mb-6">
                 <CardHeader>
-                    <CardTitle>Latest Reports</CardTitle>
+                    <CardTitle class="flex items-center gap-2">
+                        <Filter class="w-5 h-5" />
+                        Filters
+                    </CardTitle>
+                    <CardDescription>Filter and search through reports</CardDescription>
                 </CardHeader>
+                <CardContent>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="space-y-2">
+                            <Label for="status">Status</Label>
+                            <Select v-model="filtersValues.status" id="status" multiple>
+                                <SelectTrigger class="w-full">
+                                    <SelectValue placeholder="Select status" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="pending">Pending</SelectItem>
+                                    <SelectItem value="under_review">Under Review</SelectItem>
+                                    <SelectItem value="verified">Verified</SelectItem>
+                                    <SelectItem value="resolved">Resolved</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
+
+
+                        <div class="space-y-2">
+                            <Label for="severity">Severity</Label>
+                            <Select v-model="filtersValues.severity" id="severity" multiple>
+                                <SelectTrigger class="w-full">
+                                    <SelectValue placeholder="Select severity" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="critical">Critical</SelectItem>
+                                    <SelectItem value="high">High</SelectItem>
+                                    <SelectItem value="medium">Medium</SelectItem>
+                                    <SelectItem value="low">Low</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
+
+
+                        <div class="space-y-2">
+                            <Label for="status">Date</Label>
+
+                            <DateRangeFilter :isFullWidth="true"
+                                @update:range="(range) => (filtersValues.date = range)" />
+                        </div>
+                    </div>
+
+                </CardContent>
+            </Card>
+            <Card>
                 <CardContent>
                     <Table>
                         <TableHeader>
@@ -182,60 +158,34 @@ const handlePageChange = (page: number) => {
                             <TableRow v-for="report in reports.data" :key="report.id">
                                 <TableCell class="font-medium">{{ report.id }}</TableCell>
                                 <TableCell>{{ report.damage_type.name }}</TableCell>
-                                <TableCell>{{ report.address }}</TableCell>
+                                <TableCell>{{ report.address.slice(0, 8) }}...</TableCell>
                                 <TableCell>
                                     <Badge class="capitalize" :class="severityColors[report.severity.name]">
                                         {{ report.severity.name.replace('_', ' ') }}
                                     </Badge>
                                 </TableCell>
                                 <TableCell>
-                                    <Badge variant="outline" class="capitalize" :class="statusColors[report.status.name]"
-                                        >{{ report.status.name.replace('_', ' ') }}
+                                    <Badge variant="outline" class="capitalize"
+                                        :class="statusColors[report.status.name]">{{ report.status.name.replace('_', '')
+                                        }}
                                     </Badge>
                                 </TableCell>
                                 <TableCell>
                                     {{ formatDate(report.created_at) }}
                                 </TableCell>
                                 <TableCell class="text-right">
-                                    <Button
-                                        @click="
-                                            () => {
-                                                router.get(route('reports.show', report.id));
-                                            }
-                                        "
-                                    >
+                                    <Button @click="
+                                        () => {
+                                            router.get(route('reports.show', report.id));
+                                        }
+                                    ">
                                         View
                                     </Button>
                                 </TableCell>
                             </TableRow>
                         </TableBody>
                     </Table>
-                    <div>
-                        <Pagination
-                            v-slot="{ page }"
-                            :items-per-page="reports.per_page"
-                            :total="reports.total"
-                            :default-page="1"
-                            :siblingCount="1"
-                            @update:page="handlePageChange"
-                        >
-                            <PaginationContent v-slot="{ items }">
-                                <PaginationPrevious />
-
-                                <template v-for="(item, index) in items" :key="index">
-                                    <PaginationItem v-if="item.type === 'page'" :value="item.value" :is-active="item.value === page">
-                                        {{ item.value }}
-                                    </PaginationItem>
-                                </template>
-
-                                <PaginationEllipsis :index="10" />
-
-                                <PaginationNext />
-                            </PaginationContent>
-                        </Pagination>
-
-                        <div class="mt-4 text-sm text-gray-600">Showing {{ reports.from }} to {{ reports.to }} of {{ reports.total }} results</div>
-                    </div>
+                    <ModelPagination :model="reports" @update:page="handlePageChange" />
                 </CardContent>
             </Card>
         </div>

@@ -36,8 +36,12 @@ const props = defineProps<props>();
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
+        title: 'Reports',
+        href: route('reports.index'),
+    },
+    {
         title: 'Report Details',
-        href: '/reports-map',
+        href: route('reports.show', props.report.id),
     },
 ];
 
