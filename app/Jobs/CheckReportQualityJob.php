@@ -4,9 +4,7 @@ namespace App\Jobs;
 
 use App\Models\Report;
 use App\Models\ReportFlag;
-use App\Notifications\ReportFlagNotification;
 use App\Services\ImageQualityService;
-use App\Services\ReputationService;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Log;
@@ -55,10 +53,6 @@ class CheckReportQualityJob implements ShouldQueue
             'reason' => implode(', ', $reasons),
         ]);
         Log::warning("Report #{$this->report->id} flagged as LOW QUALITY.", ['reasons' => $reasons]);
-        ReputationService::addReputationHistory($this->report, ReputationService::TYPE_LOW_QUALITY);
-
-        $this->report->user->notify(new ReportFlagNotification($flag));
-
     }
 
     /**

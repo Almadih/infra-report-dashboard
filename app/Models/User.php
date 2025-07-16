@@ -53,6 +53,7 @@ class User extends Authenticatable
         'password',
         'device_id',
         'is_anonymous',
+        'show_info_to_public',
     ];
 
     /**

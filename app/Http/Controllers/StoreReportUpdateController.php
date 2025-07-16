@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Report;
+use App\Notifications\ReportUpdatesNotification;
 use Illuminate\Http\Request;
 
 class StoreReportUpdateController extends Controller
@@ -17,6 +18,8 @@ class StoreReportUpdateController extends Controller
         $report->updates()->create([
             'text' => $request->text,
         ]);
+
+        $report->user->notify(new ReportUpdatesNotification($report));
 
         return redirect()->back();
 

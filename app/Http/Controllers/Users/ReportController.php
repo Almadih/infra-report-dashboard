@@ -25,7 +25,11 @@ class ReportController extends Controller
 
         $centerPoint = Point::makeGeodetic($request->lat, $request->lng);
 
-        $reports = Report::with(['damageType', 'status', 'severity', 'images', 'flags', 'updates'])
+        $reports = Report::with(['damageType', 'status', 'severity', 'images', 'flags', 'updates', 'user' => function ($query) {
+            $query->where(function ($q) {
+                $q->where('show_info_to_public', true)->orWhere('id', Auth::user()->id);
+            })->select('id', 'name', 'reputation');
+        }])
             ->where(ST::dWithinGeography('location', $centerPoint, $request->radius), true)
             ->get();
 
@@ -75,7 +79,11 @@ class ReportController extends Controller
 
     public function show(Report $report)
     {
-        $report->load(['severity', 'status', 'damageType', 'images', 'updates', 'flags']);
+        $report->load(['severity', 'status', 'damageType', 'images', 'updates', 'flags', 'user' => function ($query) {
+            $query->where(function ($q) {
+                $q->where('show_info_to_public', true)->orWhere('id', Auth::user()->id);
+            })->select('id', 'name', 'reputation');
+        }]);
 
         return response()->json($report);
     }

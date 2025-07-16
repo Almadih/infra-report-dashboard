@@ -81,6 +81,6 @@ class Report extends Model
      */
     public function flags(): HasMany
     {
-        return $this->hasMany(ReportFlag::class)->latest();
+        return $this->hasMany(ReportFlag::class)->latest()->where('confirmed_by_admin', true);
     }
 }

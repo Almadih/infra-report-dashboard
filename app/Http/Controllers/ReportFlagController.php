@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\ReportFlag;
+use App\Notifications\ReportFlagNotification;
+use App\Services\ReputationService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Spatie\QueryBuilder\AllowedFilter;
@@ -60,6 +62,23 @@ class ReportFlagController extends Controller
             'confirmed_by_admin' => true,
         ]);
 
+        $report = $flag->report;
+
+        $reputationHistoryType = '';
+        switch ($flag->type) {
+            case 'duplicate':
+                $reputationHistoryType = ReputationService::TYPE_DUPLICATE;
+                break;
+            case 'low_quality':
+                $reputationHistoryType = ReputationService::TYPE_LOW_QUALITY;
+                break;
+            default:
+                break;
+        }
+
+        ReputationService::addReputationHistory($report, $reputationHistoryType);
+        $report->user->notify(new ReportFlagNotification($flag));
+
         return redirect()->back();
     }
 
@@ -84,6 +103,23 @@ class ReportFlagController extends Controller
             'confirmed_by_admin' => $validated['confirmed_by_admin'],
             'reason' => $validated['reason'],
         ]);
+
+        $report = $ReportFlag->report;
+
+        $reputationHistoryType = '';
+        switch ($ReportFlag->type) {
+            case 'duplicate':
+                $reputationHistoryType = ReputationService::TYPE_DUPLICATE;
+                break;
+            case 'low_quality':
+                $reputationHistoryType = ReputationService::TYPE_LOW_QUALITY;
+                break;
+            default:
+                break;
+        }
+
+        ReputationService::addReputationHistory($report, $reputationHistoryType);
+        $report->user->notify(new ReportFlagNotification($ReportFlag));
 
         return redirect()->back();
     }

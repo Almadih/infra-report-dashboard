@@ -6,13 +6,10 @@ use App\Models\Report;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 
-class ReportStatusNotification extends Notification
+class ReportUpdatesNotification extends Notification
 {
     use Queueable;
 
-    /**
-     * Create a new notification instance.
-     */
     private string $status;
 
     private string $damageType;
@@ -38,8 +35,8 @@ class ReportStatusNotification extends Notification
     {
 
         return [
-            'title' => 'Report Status updated',
-            'body' => "Report {$this->damageType} status has been updated to {$this->status}",
+            'title' => 'Report got new updated',
+            'body' => "Report {$this->damageType} has new updates from admin",
         ];
     }
 
@@ -61,8 +58,8 @@ class ReportStatusNotification extends Notification
     {
 
         return [
-            'title' => 'Report Status updated',
-            'body' => "Report {$this->damageType} status has been updated to {$this->status}",
+            'title' => 'Report got new updated',
+            'body' => "Report {$this->damageType} has new updates from admin",
             'data' => [
                 'report_id' => $this->report->id,
             ],

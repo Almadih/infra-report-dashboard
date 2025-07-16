@@ -4,8 +4,6 @@ namespace App\Jobs;
 
 use App\Models\Report;
 use App\Models\ReportFlag;
-use App\Notifications\ReportFlagNotification;
-use App\Services\ReputationService;
 use Clickbar\Magellan\Data\Geometries\Point;
 use Clickbar\Magellan\Database\PostgisFunctions\ST;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -50,10 +48,7 @@ class CheckDuplicatedReportJob implements ShouldQueue
                     'reason' => "Report is a duplicate of Report #{$report->id}",
                 ]);
                 Log::info("Report #{$this->report->id} flagged as DUPLICATE to Report #{$report->id}");
-                $this->report->user->notify(new ReportFlagNotification($flag));
             }
-
-            ReputationService::addReputationHistory($report, ReputationService::TYPE_DUPLICATE);
 
         } catch (\Exception $e) {
             Log::error($e->getMessage());

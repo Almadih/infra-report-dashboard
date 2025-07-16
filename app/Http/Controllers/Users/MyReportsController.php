@@ -14,7 +14,7 @@ class MyReportsController extends Controller
      */
     public function __invoke(Request $request)
     {
-        $reports = Report::with(['status', 'damageType', 'severity', 'images'])->where('user_id', Auth::user()->id)->get();
+        $reports = Report::with(['status', 'damageType', 'severity', 'images', 'flags', 'updates'])->where('user_id', Auth::user()->id)->get();
 
         return response()->json($reports);
     }
