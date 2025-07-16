@@ -22,7 +22,13 @@ const handlePageChange = (page: number) => {
 <template>
     <div>
 
-        <Pagination v-slot="{ page }" :items-per-page="model.per_page" :total="model.total" :default-page="1"
+        <div v-if="model.data.length === 0" class="text-center py-8">
+            <p class="text-muted-foreground">
+                No results found matching your criteria.
+            </p>
+        </div>
+
+        <Pagination v-else v-slot="{ page }" :items-per-page="model.per_page" :total="model.total" :default-page="1"
             :siblingCount="1" @update:page="handlePageChange">
             <PaginationContent v-slot="{ items }">
                 <PaginationPrevious />
