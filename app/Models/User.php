@@ -3,6 +3,8 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -66,6 +68,8 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+    protected $appends = ['reputation_title'];
+
     /**
      * Get the attributes that should be cast.
      *
@@ -95,5 +99,25 @@ class User extends Authenticatable
     public function reputationHistory(): HasMany
     {
         return $this->hasMany(ReputationHistory::class);
+    }
+
+    public function reputationTitle(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                if ($this->reputation <= 50) {
+                    return 'Newcomer';
+                } elseif ($this->reputation <= 100) {
+                    return 'Regular';
+                } elseif ($this->reputation <= 200) {
+                    return 'Trusted';
+                } elseif ($this->reputation <= 300) {
+                    return 'Expert';
+                } else {
+                    return 'Unknown';
+                }
+            },
+            set: null,
+        );
     }
 }

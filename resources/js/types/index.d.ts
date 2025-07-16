@@ -62,6 +62,7 @@ export interface User {
     is_active: boolean;
     created_at: string;
     updated_at: string;
+    reputation_title: string;
 }
 
 export interface Report {

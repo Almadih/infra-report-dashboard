@@ -5,7 +5,6 @@ import ModelPagination from '@/components/ModelPagination.vue';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { BreadcrumbItem, Location, ModelPagination as ModelPaginationType, Report, ReportFilters } from '@/types';
@@ -14,7 +13,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 
 import { Head, router } from '@inertiajs/vue3';
 import { pickBy } from 'lodash-es';
-import { X, XIcon } from 'lucide-vue-next';
+import { XIcon } from 'lucide-vue-next';
 import { ref, watch } from 'vue';
 import Label from '@/components/ui/label/Label.vue';
 
