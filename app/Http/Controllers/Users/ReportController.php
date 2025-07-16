@@ -25,7 +25,9 @@ class ReportController extends Controller
 
         $centerPoint = Point::makeGeodetic($request->lat, $request->lng);
 
-        $reports = Report::with(['damageType', 'status', 'severity', 'images', 'flags', 'updates', 'user' => function ($query) {
+        $reports = Report::with(['damageType', 'status', 'severity', 'images', 'flags' => function ($q) {
+            $q->where('confirmed_by_admin', true);
+        }, 'updates', 'user' => function ($query) {
             $query->where(function ($q) {
                 $q->where('show_info_to_public', true)->orWhere('id', Auth::user()->id);
             })->select('id', 'name', 'reputation');
