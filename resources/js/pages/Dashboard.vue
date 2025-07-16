@@ -1,14 +1,12 @@
 <script setup lang="ts">
 import ReportsHeatMap from '@/components/ReportsHeatMap.vue';
-import { Badge } from '@/components/ui/badge';
+import ReportsTable from '@/components/ReportsTable.vue';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { Report, type BreadcrumbItem } from '@/types';
-import { formatDate, severityColors, statusColors } from '@/utils';
-import { Head, router } from '@inertiajs/vue3';
-import { Activity, AlertTriangle, Clock, FileText } from 'lucide-vue-next';
+import { Head, Link } from '@inertiajs/vue3';
+import { Activity, AlertTriangle, Clock, ExternalLink, FileText } from 'lucide-vue-next';
 interface props {
     reports: Report[];
     stats: {
@@ -110,55 +108,19 @@ const formatNumber = (num: number) => {
                     <div>
                         <Card>
                             <CardHeader>
-                                <CardTitle>Latest Reports</CardTitle>
+                                <div class="flex items-center justify-between">
+
+                                    <CardTitle>Latest Reports</CardTitle>
+                                    <Button>
+
+                                        <Link :href="route('reports.index')">View All</Link>
+                                        <ExternalLink class="w-3 h-3" />
+
+                                    </Button>
+                                </div>
                             </CardHeader>
                             <CardContent>
-                                <Table>
-                                    <TableHeader>
-                                        <TableRow>
-                                            <TableHead>ID</TableHead>
-                                            <TableHead>Damage Type</TableHead>
-                                            <TableHead>Address</TableHead>
-                                            <TableHead>Severity</TableHead>
-                                            <TableHead>Status</TableHead>
-                                            <TableHead>Date</TableHead>
-                                            <TableHead class="text-right">Actions</TableHead>
-                                        </TableRow>
-                                    </TableHeader>
-                                    <TableBody>
-                                        <TableRow v-for="report in reports" :key="report.id">
-                                            <TableCell class="font-medium">{{ report.id }}</TableCell>
-                                            <TableCell>{{ report.damage_type.name }}</TableCell>
-                                            <TableCell
-                                                class="break-words break-normal overflow-hidden whitespace-normal">{{
-                                                    report.address }}
-                                            </TableCell>
-                                            <TableCell>
-                                                <Badge class="capitalize" :class="severityColors[report.severity.name]">
-                                                    {{ report.severity.name.replace('_', ' ') }}
-                                                </Badge>
-                                            </TableCell>
-                                            <TableCell>
-                                                <Badge variant="outline" class="capitalize"
-                                                    :class="statusColors[report.status.name]">{{
-                                                        report.status.name.replace('_', ' ') }}
-                                                </Badge>
-                                            </TableCell>
-                                            <TableCell>
-                                                {{ formatDate(report.created_at) }}
-                                            </TableCell>
-                                            <TableCell class="text-right">
-                                                <Button @click="
-                                                    () => {
-                                                        router.get(route('reports.show', report.id));
-                                                    }
-                                                ">
-                                                    View
-                                                </Button>
-                                            </TableCell>
-                                        </TableRow>
-                                    </TableBody>
-                                </Table>
+                                <ReportsTable :reports="reports" />
                             </CardContent>
                         </Card>
                     </div>

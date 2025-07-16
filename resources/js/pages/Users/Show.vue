@@ -1,11 +1,9 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
 import { Link, router } from '@inertiajs/vue3'
 
 // UI Components (assuming shadcn-vue setup)
 // Note: In a Laravel/Inertia project, the path is often '@/Components/ui/...'
 import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
