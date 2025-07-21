@@ -31,7 +31,10 @@ class AnonymousAuthController extends Controller
                 // Password can be a random string as it won't be used for login
                 // Or make password nullable in DB.
                 'password' => Hash::make(Str::random(16)),
+                'reputation' => 0,
+                'show_info_to_public' => false,
                 'is_anonymous' => true,
+
             ]);
         }
 

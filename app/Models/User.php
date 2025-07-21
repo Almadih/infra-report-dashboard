@@ -57,6 +57,7 @@ class User extends Authenticatable
         'is_anonymous',
         'show_info_to_public',
         'is_active',
+        'reputation',
     ];
 
     /**
