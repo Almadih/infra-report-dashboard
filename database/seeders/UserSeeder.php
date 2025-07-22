@@ -13,9 +13,22 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        User::factory()->create([
-            'email' => 'admin@admin.com',
-            'password' => Hash::make('password'),
-        ]);
+        $users = [
+            [
+                'device_id' => '59df38eec3e2021210aea3b6d833a636',
+            ],
+            [
+                'device_id' => '63df38eec3e2021210aea3b6d833a646',
+            ],
+        ];
+
+        foreach ($users as $user) {
+            User::factory()->create([
+                'email' => $user['device_id'].'@user.com',
+                'password' => Hash::make('password'),
+                'is_anonymous' => true,
+            ]);
+
+        }
     }
 }

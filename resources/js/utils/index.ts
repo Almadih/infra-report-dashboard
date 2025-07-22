@@ -1,18 +1,18 @@
 import { format, parseISO } from 'date-fns';
 
 export const statusColors: { [key: string]: string } = {
-    pending: 'border-yellow-500 text-yellow-500',
-    under_review: 'border-orange-500 text-orange-500',
-    resolved: 'border-green-500 text-green-500',
-    verified: 'border-blue-500 text-blue-500',
+    pending: 'bg-yellow-100 text-yellow-800 border-yellow-200',
+    under_review: 'bg-orange-100 text-orange-800 border-orange-200',
+    resolved: 'bg-green-100 text-green-800 border-green-200',
+    verified: 'bg-blue-100 text-blue-800 border-blue-200',
 };
 
 // Severity colors mapping
 export const severityColors: { [key: string]: string } = {
-    critical: 'bg-red-500',
-    high: 'bg-orange-500',
-    medium: 'bg-yellow-500',
-    low: 'bg-green-500',
+    critical: 'bg-red-600 text-white',
+    high: 'bg-red-100 text-red-800 border-red-200',
+    medium: 'bg-yellow-100 text-yellow-800 border-yellow-200',
+    low: 'bg-green-100 text-green-800 border-green-200',
 };
 
 // Utility: Flatten nested filter structure to URL-safe format

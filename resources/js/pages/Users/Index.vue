@@ -12,7 +12,7 @@ import AppLayout from '@/layouts/AppLayout.vue';
 import { BreadcrumbItem, ModelPagination as ModelPaginationType, User } from '@/types';
 import { formatDate } from '@/utils';
 import { Head, Link, router, useForm } from '@inertiajs/vue3';
-import { Eye, MoreHorizontal, UserCheck, UserX } from 'lucide-vue-next';
+import { Eye, MoreHorizontal, Star, UserCheck, UserX } from 'lucide-vue-next';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -102,6 +102,7 @@ const submit = (isActive: boolean) => {
                                 <TableHead>Display Name</TableHead>
                                 <TableHead>Status</TableHead>
                                 <TableHead>Reputation</TableHead>
+                                <TableHead>Title</TableHead>
                                 <TableHead>Reports</TableHead>
                                 <TableHead>Created</TableHead>
                                 <TableHead class="text-right">Actions</TableHead>
@@ -120,12 +121,26 @@ const submit = (isActive: boolean) => {
                                     </Badge>
                                 </TableCell>
                                 <TableCell>
-
-
                                     {{ user.reputation }}
-
-
-
+                                </TableCell>
+                                <TableCell>
+                                    <Badge v-if="user.reputation_title === 'Expert'" variant="default"
+                                        class="bg-purple-100 text-purple-800 border-purple-200">
+                                        <Star class="w-3 h-3 mr-1" /> Expert
+                                    </Badge>
+                                    <Badge v-else-if="user.reputation_title === 'Trusted'" variant="default"
+                                        class="bg-blue-100 text-blue-800 border-blue-200">
+                                        <Star class="w-3 h-3 mr-1" /> Trusted
+                                    </Badge>
+                                    <Badge v-else-if="user.reputation_title === 'Regular'" variant="secondary">
+                                        <Star class="w-3 h-3 mr-1" /> Regular
+                                    </Badge>
+                                    <Badge v-else-if="user.reputation_title === 'Newcomer'" variant="outline">
+                                        <Star class="w-3 h-3 mr-1" /> New
+                                    </Badge>
+                                    <Badge v-else variant="outline">
+                                        <Star class="w-3 h-3 mr-1" /> Unknown
+                                    </Badge>
                                 </TableCell>
                                 <TableCell>
                                     {{ user.reports_count }}

@@ -25,7 +25,7 @@ class UserController extends Controller
 
         return Inertia::render('Users/Show', [
             'user' => $user,
-            'reputationHistory' => $user->reputationHistory()->paginate(10)->withQueryString(),
+            'reputationHistory' => $user->reputationHistory()->latest()->paginate(10)->withQueryString(),
         ]);
     }
 }

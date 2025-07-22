@@ -78,7 +78,8 @@ const handlePageChange = (page: number) => {
     const queryParams = {
         'filter[status]': filtersValues.value.status.join(','),
         'filter[severity]': filtersValues.value.severity.join(','),
-        'filter[date]': filtersValues.value.date,
+        'filter[date]': filtersValues.value.date.start != '' ? `${filtersValues.value.date.start},${filtersValues.value.date.end}` : '',
+
         page
     };
 

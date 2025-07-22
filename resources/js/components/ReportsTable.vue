@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { formatDate } from '@/utils';
+import { formatDate, severityColors, statusColors } from '@/utils';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -52,41 +52,20 @@ const statusIcons = {
                     </div>
                 </TableCell>
                 <TableCell>
-                    <!-- Status Badge Logic -->
-                    <Badge v-if="report.status.name === 'pending'" variant="secondary"
-                        class="bg-yellow-100 text-yellow-800 border-yellow-200">
-                        <component class="h-4 w-4" :is="statusIcons[report.status.name as keyof typeof statusIcons]" />
-                        Pending
-                    </Badge>
-                    <Badge v-else-if="report.status.name === 'under_review'" variant="default"
-                        class="bg-blue-100 text-orange-800 border-orange-200">
-                        <component class="h-4 w-4" :is="statusIcons[report.status.name as keyof typeof statusIcons]" />
-                        Under
-                        Review
-                    </Badge>
-                    <Badge v-else-if="report.status.name === 'resolved'" variant="default"
-                        class="bg-green-100 text-green-800 border-green-200">
-                        <component class="h-4 w-4" :is="statusIcons[report.status.name as keyof typeof statusIcons]" />
-                        Resolved
-                    </Badge>
-                    <Badge v-else-if="report.status.name === 'verified'" variant="default"
-                        class="bg-blue-100 text-blue-800 border-blue-200">
-                        <component class="h-4 w-4" :is="statusIcons[report.status.name as keyof typeof statusIcons]" />
-                        Verified
+                    <Badge variant="outline" :class="statusColors[report.status.name as keyof typeof statusColors]">
+                        <span class="flex items-center gap-1 capitalize">
+                            <component class="h-4 w-4"
+                                :is="statusIcons[report.status.name as keyof typeof statusIcons]" />
+                            {{ report.status.name.replace('_', ' ') }}
+                        </span>
                     </Badge>
 
                 </TableCell>
                 <TableCell>
-                    <!-- Severity Badge Logic -->
-                    <Badge v-if="report.severity.name === 'critical'" variant="destructive"
-                        class="bg-red-600 text-white">Critical</Badge>
-                    <Badge v-else-if="report.severity.name === 'high'" variant="destructive"
-                        class="bg-red-100 text-red-800 border-red-200">High</Badge>
-                    <Badge v-else-if="report.severity.name === 'medium'" variant="secondary"
-                        class="bg-orange-100 text-orange-800 border-orange-200">Medium</Badge>
-                    <Badge v-else-if="report.severity.name === 'low'" variant="outline"
-                        class="bg-green-100 text-green-800 border-green-200">Low</Badge>
-                    <Badge v-else variant="outline">Unknown</Badge>
+                    <Badge class="capitalize"
+                        :class="severityColors[report.severity.name as keyof typeof severityColors]">
+                        {{ report.severity.name }}
+                    </Badge>
                 </TableCell>
                 <TableCell>
                     <Badge variant="outline" class="capitalize">

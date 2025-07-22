@@ -30,7 +30,7 @@ class UserFactory extends Factory
             'password' => Hash::make('password'),
             'remember_token' => Str::random(10),
             'is_anonymous' => false,
-            'reputation' => 0,
+            'reputation' => $this->faker->numberBetween(0, 300),
         ];
     }
 

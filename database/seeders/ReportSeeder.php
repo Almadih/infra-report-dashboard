@@ -6,6 +6,7 @@ use App\Models\DamageType;
 use App\Models\Report;
 use App\Models\Severity;
 use App\Models\Status;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Http\File;
 use Illuminate\Support\Facades\Storage;
@@ -18,12 +19,13 @@ class ReportSeeder extends Seeder
      */
     public function run(): void
     {
-        for ($i = 0; $i <= 5; $i++) {
+        for ($i = 0; $i <= 50; $i++) {
             error_log($i);
             $report = Report::factory()->create([
                 'severity_id' => Severity::inRandomOrder()->first()->id,
                 'status_id' => Status::inRandomOrder()->first()->id,
                 'damage_type_id' => DamageType::inRandomOrder()->first()->id,
+                'user_id' => User::where('is_anonymous', true)->inRandomOrder()->first()->id,
             ]);
             $reportPath = "reports/{$report->id}";
             for ($ii = 1; $ii <= 2; $ii++) {
