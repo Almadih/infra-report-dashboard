@@ -9,7 +9,7 @@ const center = ref({ lat: 30.890040983375705, lng: 29.875583732404525 });
 const heatmapData = ref([]);
 const mapRef = ref<google.maps.Map | null>(null);
 
-onMounted(() => {});
+onMounted(() => { });
 
 const fetchHeatmapData = () => {
     axios.get(route('reports-heatmap')).then((res) => {
@@ -34,7 +34,7 @@ watch([mapRef], () => {
 </script>
 
 <template>
-    <Map :center="center" :zoom="10" @map:loaded="mapLoaded" class="h-[500px]">
+    <Map :center="center" :zoom="8" @map:loaded="mapLoaded" class="h-[500px]">
         <GMapHeatmap :data="heatmapData" />
     </Map>
 </template>

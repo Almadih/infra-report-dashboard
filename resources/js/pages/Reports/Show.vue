@@ -236,7 +236,7 @@ const submitFlag = () => {
                                             class="text-blue-600 hover:text-blue-800">
                                         <span class="flex items-center gap-1">
 
-                                            <dd class="text-sm">{{ report.user?.name }}</dd>
+                                            <p class="text-sm">{{ report.user?.name }}</p>
                                             <ExternalLink class="w-3 h-3" />
                                         </span>
                                         </Link>

@@ -45,7 +45,7 @@ class ReportFactory extends Factory
      */
     public function definition(): array
     {
-        $randomPoint = $this->randomGeo(29.984851, 30.817895, 30000);
+        $randomPoint = $this->randomGeo(29.984851, 30.817895, 100000);
         $startDate = Carbon::now()->subMonth(); // e.g., 1 month ago
         $endDate = Carbon::now();             // e.g., up to today
 
