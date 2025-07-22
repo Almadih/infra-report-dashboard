@@ -11,6 +11,7 @@ use App\Models\Status;
 use App\Services\ReputationService;
 use Clickbar\Magellan\Data\Geometries\Point;
 use Clickbar\Magellan\Database\PostgisFunctions\ST;
+use DB;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
@@ -45,8 +46,17 @@ class ReportController extends Controller implements HasMiddleware
                 $q->where('confirmed_by_admin', true);
             })
             ->get();
+        $ids = $reports->pluck('id')->toArray();
 
-        return response()->json($reports);
+        $center = DB::table('reports')
+            ->selectRaw('ST_AsGeoJSON(ST_Centroid(ST_Collect(ST_Transform(location, 4326)))) AS center')
+            ->whereIn('id', $ids)
+            ->first();
+
+        return response()->json([
+            'reports' => $reports,
+            'center' => $center->center ? json_decode($center->center) : null,
+        ]);
     }
 
     public function store(Request $request)
