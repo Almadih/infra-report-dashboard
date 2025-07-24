@@ -50,7 +50,7 @@ class ReportSeeder extends Seeder
     {
         $startDate = Carbon::now()->subMonth(); // e.g., 1 month ago
         $endDate = Carbon::now();             // e.g., up to today
-        $count = 1000; // total reports
+        $count = 100; // total reports
         $chunkSize = 100; // insert 100 at a time
 
         // Cache IDs to avoid repeated DB calls
@@ -67,8 +67,8 @@ class ReportSeeder extends Seeder
             for ($i = 0; $i < $chunkSize; $i++) {
                 $uuid = (string) Str::uuid();
                 $reportIds[] = $uuid;
-                $randomPoint = $this->randomGeo(29.984851, 30.817895, 100000);
-
+                $randomPoint = $this->randomGeo(30.037059, 31.225884, 10000);
+                $date = $this->faker->dateTimeBetween($startDate, $endDate);
                 $reports[] = [
                     'id' => $uuid,
                     'severity_id' => $severityIds[array_rand($severityIds)],
@@ -78,7 +78,8 @@ class ReportSeeder extends Seeder
                     'location' => Point::makeGeodetic($randomPoint['longitude'], $randomPoint['latitude']),
                     'address' => $this->faker->address(),
                     'description' => $this->faker->paragraph(),
-                    'created_at' => $this->faker->dateTimeBetween($startDate, $endDate),
+                    'created_at' => $date,
+                    'updated_at' => $date,
                 ];
             }
 
