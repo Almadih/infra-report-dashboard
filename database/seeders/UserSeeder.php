@@ -27,6 +27,7 @@ class UserSeeder extends Seeder
                 'email' => $user['device_id'].'@user.com',
                 'password' => Hash::make('password'),
                 'is_anonymous' => true,
+                'device_id' => $user['device_id'],
             ]);
 
         }
