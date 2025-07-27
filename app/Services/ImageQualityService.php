@@ -59,7 +59,7 @@ class ImageQualityService
     public function isBlurry(Image $file): bool
     {
         $imagePath = Storage::path($file->path);
-        $pythonPath = '/usr/bin/python'; // Or find with `which python3`
+        $pythonPath = env('PYTHON_BINARY'); // Or find with `which python3`
         $scriptPath = base_path('app/scripts/detect_blur.py');
 
         // 3. Create the process to run the Python script

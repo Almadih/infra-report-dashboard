@@ -77,6 +77,7 @@ class ReportController extends Controller
         $report->update([
             'status_id' => $validated['status_id'],
         ]);
+        $report->refresh();
         if ($reputationHistoryType) {
             ReputationService::addReputationHistory($report, $reputationHistoryType);
         }
