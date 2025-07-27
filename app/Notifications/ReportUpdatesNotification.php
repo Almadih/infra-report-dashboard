@@ -10,13 +10,10 @@ class ReportUpdatesNotification extends Notification
 {
     use Queueable;
 
-    private string $status;
-
     private string $damageType;
 
     public function __construct(public Report $report)
     {
-        $this->status = $report->status->name;
         $this->damageType = $report->damageType->name;
     }
 

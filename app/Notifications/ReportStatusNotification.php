@@ -5,6 +5,7 @@ namespace App\Notifications;
 use App\Models\Report;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
+use Str;
 
 class ReportStatusNotification extends Notification
 {
@@ -19,7 +20,7 @@ class ReportStatusNotification extends Notification
 
     public function __construct(public Report $report)
     {
-        $this->status = $report->status->name;
+        $this->status = str::headline($report->status->name);
         $this->damageType = $report->damageType->name;
     }
 
