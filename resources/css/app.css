@@ -7,6 +7,15 @@
 
 @custom-variant dark (&:is(.dark *));
 
+@layer utilities {
+  .animation-delay-2000 {
+    animation-delay: 2s;
+  }
+  .animation-delay-4000 {
+    animation-delay: 4s;
+  }
+}
+
 @theme inline {
     --font-sans: Instrument Sans, ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
 
@@ -178,4 +187,9 @@
     body {
         @apply bg-background text-foreground;
     }
+}
+
+
+* {
+    scroll-behavior: smooth;
 }

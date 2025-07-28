@@ -1,16 +1,50 @@
 <script setup lang="ts">
+import { ref } from 'vue';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Auth } from '@/types';
 import { Head, Link } from '@inertiajs/vue3';
-import { AlertTriangle, Building, Camera, CheckCircle, Clock, MapPin, RouteIcon as Road, Shield, TrendingUp, Wrench } from 'lucide-vue-next';
+import { AlertTriangle, Building, Camera, CheckCircle, Clock, MapPin, Menu, RouteIcon as Road, Shield, TrendingUp, Wrench, X } from 'lucide-vue-next';
+import { useAnimateOnScroll } from '@/composables/useAnimateOnScroll';
+import { useAnimatedCounter } from '@/composables/useAnimatedCounter';
 
 type HomePageProps = {
     auth: Auth;
 };
 
 defineProps<HomePageProps>();
+
+// --- Refs for animations ---
+const heroContent = ref(null);
+const heroImage = ref(null);
+const problemSection = ref(null);
+const howItWorksSection = ref(null);
+const featuresSection = ref(null);
+const impactSection = ref(null);
+const impactCounter1 = ref(null);
+const impactCounter2 = ref(null);
+const impactCounter3 = ref(null);
+const impactCounter4 = ref(null);
+const isMenuOpen = ref(false);
+// const reportTypesSection = ref(null);
+// const ctaSection = ref(null);
+
+// --- Use the composables ---
+const { isVisible: heroContentVisible } = useAnimateOnScroll(heroContent);
+const { isVisible: heroImageVisible } = useAnimateOnScroll(heroImage);
+const { isVisible: problemVisible } = useAnimateOnScroll(problemSection);
+const { isVisible: howItWorksVisible } = useAnimateOnScroll(howItWorksSection);
+const { isVisible: featuresVisible } = useAnimateOnScroll(featuresSection);
+const { isVisible: impactVisible } = useAnimateOnScroll(impactSection);
+// const { isVisible: reportTypesVisible } = useAnimateOnScroll(reportTypesSection);
+// const { isVisible: ctaVisible } = useAnimateOnScroll(ctaSection);
+
+// --- Animated Counters ---
+const animatedRepairTime = useAnimatedCounter(impactCounter1, 50);
+const animatedReportIncrease = useAnimatedCounter(impactCounter2, 75);
+const animatedCostReduction = useAnimatedCounter(impactCounter3, 30);
+const animatedSatisfaction = useAnimatedCounter(impactCounter4, 95);
 </script>
 
 <template>
@@ -19,15 +53,25 @@ defineProps<HomePageProps>();
         <meta name="description" content="Infra report">
     </Head>
 
+    <!-- IMPROVEMENT: Added a background animation container -->
     <div class="flex min-h-screen flex-col bg-gradient-to-b from-slate-50 to-white dark:from-slate-950 dark:to-black">
+        <div class="absolute top-0 left-0 w-full h-full bg-white dark:bg-black z-0">
+            <div
+                class="absolute left-0 right-auto top-50 w-100 h-100 bg-[rgba(16,185,129,0.5)] rounded-full mix-blend-multiply filter blur-[90px] opacity-30 animate-pulse">
+
+            </div>
+
+        </div>
+
         <header
             class="sticky top-0 z-50 flex h-16 items-center border-b border-slate-200 bg-white/80 px-4 backdrop-blur-sm lg:px-6 dark:border-slate-800 dark:bg-slate-900/80">
             <Link href="/" class="flex items-center justify-center">
             <div class="flex items-center space-x-2">
-                <img src="logo.webp" class="h-12 w-auto" alt="infra report logo" />
+                <img src="/logo.webp" class="h-12 w-auto" alt="infra report logo" />
             </div>
             </Link>
-            <nav class="ml-auto flex gap-4 sm:gap-6">
+            <!-- IMPROVEMENT: Added responsive menu for mobile -->
+            <nav class="ml-auto hidden md:flex gap-4 sm:gap-6">
                 <Link v-if="auth.user" :href="route('dashboard')"
                     class="text-sm font-medium text-slate-700 transition-colors hover:text-emerald-600 dark:text-slate-300 dark:hover:text-emerald-400">
                 Dashboard
@@ -38,87 +82,140 @@ defineProps<HomePageProps>();
                     Log in
                     </Link>
                 </template>
-                <Link href="#features"
+                <a href="#how-it-works"
                     class="text-sm font-medium text-slate-700 transition-colors hover:text-emerald-600 dark:text-slate-300 dark:hover:text-emerald-400">
-                Features
-                </Link>
-                <Link href="#how-it-works"
+                    How It Works
+                </a>
+                <a href="#features"
                     class="text-sm font-medium text-slate-700 transition-colors hover:text-emerald-600 dark:text-slate-300 dark:hover:text-emerald-400">
-                How It Works
-                </Link>
-                <Link href="#impact"
+                    Features
+                </a>
+                <a href="#impact"
                     class="text-sm font-medium text-slate-700 transition-colors hover:text-emerald-600 dark:text-slate-300 dark:hover:text-emerald-400">
-                Impact
-                </Link>
-                <Link href="#contact"
+                    Impact
+                </a>
+                <a href="#download"
                     class="text-sm font-medium text-slate-700 transition-colors hover:text-emerald-600 dark:text-slate-300 dark:hover:text-emerald-400">
-                Contact
-                </Link>
+                    Download
+                </a>
             </nav>
+
+            <div class="flex items-center md:hidden ml-auto">
+                <Button @click="isMenuOpen = !isMenuOpen" variant="ghost" size="icon" class="rounded-lg">
+                    <Menu v-if="!isMenuOpen" class="h-6 w-6" />
+                    <X v-else class="h-6 w-6" />
+                    <span class="sr-only">Toggle menu</span>
+                </Button>
+            </div>
+            <Transition enter-active-class="transition-all duration-300 ease-out"
+                enter-from-class="opacity-0 -translate-y-4" enter-to-class="opacity-100 translate-y-0"
+                leave-active-class="transition-all duration-200 ease-in" leave-from-class="opacity-100 translate-y-0"
+                leave-to-class="opacity-0 -translate-y-4">
+                <div v-if="isMenuOpen"
+                    class="absolute top-16 left-0 z-40 w-full border-b border-slate-200 bg-white/95 p-4 backdrop-blur-sm md:hidden dark:border-slate-800 dark:bg-slate-950/95">
+                    <nav class="flex flex-col gap-4">
+                        <Link v-if="auth.user" :href="route('dashboard')" @click="isMenuOpen = false"
+                            class="text-base font-medium text-slate-700 hover:text-emerald-600 dark:text-slate-300 dark:hover:text-emerald-400">
+                        Dashboard
+                        </Link>
+                        <template v-else>
+                            <Link :href="route('login')" @click="isMenuOpen = false"
+                                class="text-base font-medium text-slate-700 hover:text-emerald-600 dark:text-slate-300 dark:hover:text-emerald-400">
+                            Log in
+                            </Link>
+                        </template>
+                        <a href="#how-it-works" @click="isMenuOpen = false"
+                            class="text-base font-medium text-slate-700 hover:text-emerald-600 dark:text-slate-300 dark:hover:text-emerald-400">
+                            How It Works
+                        </a>
+                        <a href="#features" @click="isMenuOpen = false"
+                            class="text-base font-medium text-slate-700 hover:text-emerald-600 dark:text-slate-300 dark:hover:text-emerald-400">
+                            Features
+                        </a>
+                        <a href="#impact" @click="isMenuOpen = false"
+                            class="text-base font-medium text-slate-700 hover:text-emerald-600 dark:text-slate-300 dark:hover:text-emerald-400">
+                            Impact
+                        </a>
+                        <Button as-child size="lg" @click="isMenuOpen = false"
+                            class="w-full bg-emerald-600 text-white hover:bg-emerald-700">
+                            <a href="#download">Download Now</a>
+                        </Button>
+                    </nav>
+                </div>
+            </Transition>
         </header>
 
+
+
         <main class="flex-1">
-            <section class="w-full py-12 md:py-24 lg:py-32">
-                <div class="flex-1 px-4 md:px-6">
-                    <div class="grid gap-6 lg:grid-cols-[1fr_400px] lg:gap-12 xl:grid-cols-[1fr_600px]">
-                        <div class="flex flex-col justify-center space-y-4">
-                            <div class="space-y-2">
+            <!-- HERO SECTION -->
+            <section class="w-full py-20 md:py-32 lg:py-40 relative">
+                <div class=" px-4 md:px-6">
+                    <div class="grid gap-10 lg:grid-cols-2 lg:gap-16">
+                        <div ref="heroContent"
+                            :class="['flex flex-col justify-center space-y-6 transition-all duration-1000', heroContentVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4']">
+                            <div class="space-y-4">
                                 <Badge variant="secondary"
-                                    class="w-fit bg-emerald-100 text-emerald-800 hover:bg-emerald-200 dark:bg-emerald-800 dark:text-emerald-200 dark:hover:bg-emerald-700">
+                                    class="w-fit bg-emerald-100 text-emerald-800 hover:bg-emerald-200 dark:bg-emerald-900/50 dark:text-emerald-300 dark:hover:bg-emerald-800/50 border border-emerald-200 dark:border-emerald-800/60">
                                     Empowering Communities
                                 </Badge>
+                                <!-- IMPROVEMENT: Gradient text for headline -->
                                 <h1
-                                    class="text-3xl font-bold tracking-tighter text-slate-900 sm:text-5xl xl:text-6xl/none dark:text-slate-50">
-                                    Report Infrastructure Issues. <span
-                                        class="text-emerald-600 dark:text-emerald-400">Build
-                                        Safer Communities.</span>
+                                    class="text-4xl font-extrabold tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl bg-clip-text text-transparent bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-50 dark:to-slate-300">
+                                    Report Infrastructure Issues.
+                                    <span class="text-emerald-600 dark:text-emerald-400">Build Safer Communities.</span>
                                 </h1>
                                 <p class="max-w-[600px] text-slate-600 md:text-xl dark:text-slate-400">
                                     Help your community by reporting potholes, broken bridges, damaged schools, and
-                                    other
-                                    infrastructure issues.
-                                    Together, we can ensure faster repairs and safer public spaces for everyone.
+                                    other infrastructure issues. Together, we can ensure faster repairs and safer
+                                    public spaces for everyone.
                                 </p>
                             </div>
-                            <div class="flex flex-col gap-2 min-[400px]:flex-row">
-                                <Link href="#download" size="lg"
-                                    class="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive shadow-xs h-10 rounded-md px-6 has-[>svg]:px-4 cursor-pointer bg-emerald-600 text-white hover:bg-emerald-700">
-                                Start
-                                Reporting </Link>
+                            <div class="flex flex-col gap-3 min-[400px]:flex-row">
+                                <!-- IMPROVEMENT: More interactive buttons -->
+                                <Button as-child size="lg"
+                                    class="bg-emerald-600 text-white hover:bg-emerald-700 transition-transform hover:scale-105 active:scale-95">
+                                    <a href="#download">Start Reporting</a>
+                                </Button>
                                 <Button variant="outline" size="lg"
-                                    class="cursor-pointer dark:border-slate-600 dark:text-slate-50 dark:hover:bg-slate-800">
+                                    class="transition-transform hover:scale-105 active:scale-95 dark:border-slate-700 dark:hover:bg-slate-800">
                                     Learn More
                                 </Button>
                             </div>
                             <div class="flex items-center space-x-4 text-sm text-slate-600 dark:text-slate-400">
-                                <div class="flex items-center space-x-1">
+                                <div class="flex items-center space-x-1.5">
                                     <CheckCircle class="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
                                     <span>Free to use</span>
                                 </div>
-                                <div class="flex items-center space-x-1">
+                                <div class="flex items-center space-x-1.5">
                                     <CheckCircle class="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
                                     <span>Anonymous reporting</span>
                                 </div>
-                                <div class="flex items-center space-x-1">
+                                <div class="flex items-center space-x-1.5">
                                     <CheckCircle class="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
                                     <span>Real-time tracking</span>
                                 </div>
                             </div>
                         </div>
-                        <div class="flex items-center justify-center">
-                            <div class="relative">
-                                <img src="photo-4.webp" alt="Infrastructure reporting app interface"
-                                    class="mx-auto h-[100%] w-[100%] overflow-hidden rounded-xl object-cover shadow-2xl" />
+                        <div ref="heroImage"
+                            :class="['flex items-center justify-center transition-all duration-1000 delay-300', heroImageVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-90']">
+                            <div class="relative group">
+                                <img src="/photo-4.webp" alt="Infrastructure reporting app interface"
+                                    class="mx-auto overflow-hidden rounded-xl object-cover shadow-2xl shadow-emerald-900/20 dark:shadow-emerald-400/10" />
+                                <!-- IMPROVEMENT: Subtle glow effect on image -->
                                 <div
-                                    class="absolute inset-0 rounded-xl bg-gradient-to-t from-black/20 to-transparent dark:from-black/40" />
+                                    class="absolute -inset-4 bg-emerald-500/10 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10">
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <section class="w-full bg-slate-100 py-12 md:py-24 lg:py-32 dark:bg-slate-900">
-                <div class="flex-1 px-4 md:px-6">
+            <!-- PROBLEM SECTION -->
+            <section ref="problemSection"
+                :class="['w-full bg-slate-100 py-12 md:py-24 lg:py-32 dark:bg-slate-900/70 transition-all duration-1000', problemVisible ? 'opacity-100' : 'opacity-0']">
+                <div class=" px-4 md:px-6">
                     <div class="flex flex-col items-center justify-center space-y-4 text-center">
                         <div class="space-y-2">
                             <h2
@@ -128,59 +225,57 @@ defineProps<HomePageProps>();
                             <p
                                 class="max-w-[900px] text-slate-600 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed dark:text-slate-400">
                                 Infrastructure damage often goes unreported, leading to safety risks and inefficient
-                                resource
-                                allocation. Traditional
-                                reporting channels are inaccessible or underutilized by communities that need them most.
+                                resource allocation.
                             </p>
                         </div>
                     </div>
-                    <div class="mx-auto grid max-w-5xl items-center gap-6 py-12 lg:grid-cols-3 lg:gap-12">
-                        <Card class="h-full border-0 shadow-lg dark:bg-slate-800">
+                    <!-- IMPROVEMENT: Card hover effects and staggered animation -->
+                    <div class="mx-auto grid max-w-5xl items-stretch gap-6 py-12 lg:grid-cols-3 lg:gap-8">
+                        <Card
+                            :class="['h-full border-0 shadow-lg dark:bg-slate-800/50 transition-all duration-500 hover:!opacity-100 hover:scale-105 hover:shadow-emerald-500/20 group', problemVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5']">
                             <CardHeader class="text-center">
                                 <div
-                                    class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-red-100 dark:bg-red-800/30">
+                                    class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-red-100 dark:bg-red-900/30">
                                     <AlertTriangle class="h-6 w-6 text-red-600 dark:text-red-400" />
                                 </div>
                                 <CardTitle class="text-xl dark:text-slate-100">Unreported Damage</CardTitle>
                             </CardHeader>
                             <CardContent>
                                 <p class="text-center text-slate-600 dark:text-slate-400">
-                                    Critical infrastructure issues like potholes and broken bridges remain unreported,
-                                    creating
-                                    safety hazards for
-                                    entire communities.
+                                    Critical issues remain unreported, creating safety hazards for entire communities.
                                 </p>
                             </CardContent>
                         </Card>
-                        <Card class="h-full border-0 shadow-lg dark:bg-slate-800">
+                        <Card
+                            :class="['h-full border-0 shadow-lg dark:bg-slate-800/50 transition-all duration-500 delay-150 hover:!opacity-100 hover:scale-105 hover:shadow-emerald-500/20 group', problemVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5']">
                             <CardHeader class="text-center">
                                 <div
-                                    class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-orange-100 dark:bg-orange-800/30">
+                                    class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-orange-100 dark:bg-orange-900/30">
                                     <Clock class="h-6 w-6 text-orange-600 dark:text-orange-400" />
                                 </div>
                                 <CardTitle class="text-xl dark:text-slate-100">Delayed Repairs</CardTitle>
                             </CardHeader>
                             <CardContent>
                                 <p class="text-center text-slate-600 dark:text-slate-400">
-                                    Without proper reporting channels, maintenance delays increase costs and put public
-                                    safety
-                                    at risk.
+                                    Maintenance delays increase costs and put public safety at risk without proper
+                                    reporting
+                                    channels.
                                 </p>
                             </CardContent>
                         </Card>
-                        <Card class="h-full border-0 shadow-lg dark:bg-slate-800">
+                        <Card
+                            :class="['h-full border-0 shadow-lg dark:bg-slate-800/50 transition-all duration-500 delay-300 hover:!opacity-100 hover:scale-105 hover:shadow-emerald-500/20 group', problemVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5']">
                             <CardHeader class="text-center">
                                 <div
-                                    class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-blue-100 dark:bg-blue-800/30">
+                                    class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-blue-100 dark:bg-blue-900/30">
                                     <TrendingUp class="h-6 w-6 text-blue-600 dark:text-blue-400" />
                                 </div>
                                 <CardTitle class="text-xl dark:text-slate-100">Resource Waste</CardTitle>
                             </CardHeader>
                             <CardContent>
                                 <p class="text-center text-slate-600 dark:text-slate-400">
-                                    Inefficient allocation of repair resources leads to higher costs and longer wait
-                                    times for
-                                    critical fixes.
+                                    Inefficient allocation leads to higher costs and longer wait times for critical
+                                    fixes.
                                 </p>
                             </CardContent>
                         </Card>
@@ -188,180 +283,156 @@ defineProps<HomePageProps>();
                 </div>
             </section>
 
-            <section id="how-it-works" class="w-full py-12 md:py-24 lg:py-32">
-                <div class="flex-1 px-4 md:px-6">
+            <!-- HOW IT WORKS SECTION -->
+            <section id="how-it-works" ref="howItWorksSection"
+                :class="['w-full py-12 md:py-24 lg:py-32 transition-all duration-1000', howItWorksVisible ? 'opacity-100' : 'opacity-0']">
+                <div class="px-4 md:px-6">
                     <div class="flex flex-col items-center justify-center space-y-4 text-center">
                         <div class="space-y-2">
                             <Badge variant="secondary"
-                                class="bg-emerald-100 text-emerald-800 dark:bg-emerald-800 dark:text-emerald-200">
-                                Simple Process
+                                class="bg-emerald-100 text-emerald-800 dark:bg-emerald-900/50 dark:text-emerald-300">
+                                Simple 3-Step Process
                             </Badge>
                             <h2
                                 class="text-3xl font-bold tracking-tighter text-slate-900 sm:text-5xl dark:text-slate-50">
-                                How It
-                                Works</h2>
+                                How It Works
+                            </h2>
                             <p
                                 class="max-w-[900px] text-slate-600 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed dark:text-slate-400">
                                 Reporting infrastructure damage is as easy as taking a photo. Our streamlined process
-                                ensures
-                                your reports reach the
-                                right authorities quickly.
+                                ensures your reports reach the right authorities quickly.
                             </p>
                         </div>
                     </div>
-                    <div class="mx-auto grid max-w-5xl items-start gap-6 py-12 lg:grid-cols-3 lg:gap-12">
-                        <div class="flex flex-col items-center space-y-4 text-center">
+                    <!-- IMPROVEMENT: Added connecting line for better flow -->
+                    <div class="relative mx-auto grid max-w-5xl items-start gap-12 py-12 lg:grid-cols-3 lg:gap-10">
+                        <!-- Connecting Line -->
+                        <div class="absolute top-1/2 left-0 hidden w-full -translate-y-1/2 lg:block">
+                            <svg class="w-full" height="2" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-dasharray="8 8" stroke-linecap="round" d="M0 1H1000"
+                                    class="stroke-slate-300 dark:stroke-slate-700"></path>
+                            </svg>
+                        </div>
+                        <div
+                            :class="['relative flex flex-col items-center space-y-4 text-center transition-all duration-500', howItWorksVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5']">
                             <div
-                                class="flex h-16 w-16 items-center justify-center rounded-full bg-emerald-600 text-xl font-bold text-white">
+                                class="flex h-16 w-16 items-center justify-center rounded-full bg-emerald-600 text-2xl font-bold text-white z-10 ring-8 ring-slate-50 dark:ring-slate-950">
                                 1</div>
                             <Camera class="h-12 w-12 text-emerald-600 dark:text-emerald-400" />
                             <h3 class="text-xl font-bold dark:text-slate-100">Spot & Capture</h3>
                             <p class="text-slate-600 dark:text-slate-400">
-                                Take a photo of the infrastructure damage you've discovered. Our app automatically
-                                captures
-                                location data.
+                                Take a photo of the damage. Our app automatically captures location data.
                             </p>
                         </div>
-                        <div class="flex flex-col items-center space-y-4 text-center">
+                        <div
+                            :class="['relative flex flex-col items-center space-y-4 text-center transition-all duration-500 delay-150', howItWorksVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5']">
                             <div
-                                class="flex h-16 w-16 items-center justify-center rounded-full bg-emerald-600 text-xl font-bold text-white">
+                                class="flex h-16 w-16 items-center justify-center rounded-full bg-emerald-600 text-2xl font-bold text-white z-10 ring-8 ring-slate-50 dark:ring-slate-950">
                                 2</div>
                             <MapPin class="h-12 w-12 text-emerald-600 dark:text-emerald-400" />
                             <h3 class="text-xl font-bold dark:text-slate-100">Report & Describe</h3>
                             <p class="text-slate-600 dark:text-slate-400">
-                                Add details about the damage, select the issue type, and submit your report with precise
-                                location data.
+                                Add details, select the issue type, and submit your report with precise location data.
                             </p>
                         </div>
-                        <div class="flex flex-col items-center space-y-4 text-center">
+                        <div
+                            :class="['relative flex flex-col items-center space-y-4 text-center transition-all duration-500 delay-300', howItWorksVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5']">
                             <div
-                                class="flex h-16 w-16 items-center justify-center rounded-full bg-emerald-600 text-xl font-bold text-white">
+                                class="flex h-16 w-16 items-center justify-center rounded-full bg-emerald-600 text-2xl font-bold text-white z-10 ring-8 ring-slate-50 dark:ring-slate-950">
                                 3</div>
                             <Wrench class="h-12 w-12 text-emerald-600 dark:text-emerald-400" />
                             <h3 class="text-xl font-bold dark:text-slate-100">Track & Fix</h3>
                             <p class="text-slate-600 dark:text-slate-400">
-                                Monitor the status of your report as authorities review and schedule repairs. Get
-                                notified when
-                                work begins.
+                                Monitor the status of your report as authorities review and schedule repairs.
                             </p>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <section id="features" class="w-full bg-slate-50 py-12 md:py-24 lg:py-32 dark:bg-slate-900">
-                <div class="flex-1 px-4 md:px-6">
+            <!-- FEATURES SECTION -->
+            <section id="features" ref="featuresSection"
+                :class="['w-full bg-slate-100 py-12 md:py-24 lg:py-32 dark:bg-slate-900/70 transition-all duration-1000', featuresVisible ? 'opacity-100' : 'opacity-0']">
+                <!-- Grid background pattern -->
+                <div
+                    class="absolute inset-0 -z-10 h-full w-full bg-white bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:14px_24px] dark:bg-slate-950">
+                </div>
+                <div class="px-4 md:px-6">
                     <div class="flex flex-col items-center justify-center space-y-4 text-center">
                         <div class="space-y-2">
                             <Badge variant="secondary"
-                                class="bg-emerald-100 text-emerald-800 dark:bg-emerald-800 dark:text-emerald-200">
+                                class="bg-emerald-100 text-emerald-800 dark:bg-emerald-900/50 dark:text-emerald-300">
                                 Powerful Features
                             </Badge>
                             <h2
                                 class="text-3xl font-bold tracking-tighter text-slate-900 sm:text-5xl dark:text-slate-50">
                                 Everything You Need to Make a Difference
                             </h2>
-                            <p
-                                class="max-w-[900px] text-slate-600 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed dark:text-slate-400">
-                                Our platform provides all the tools needed for effective infrastructure damage reporting
-                                and
-                                tracking.
-                            </p>
                         </div>
                     </div>
-                    <div class="mx-auto grid max-w-5xl items-start gap-6 py-12 lg:grid-cols-2 lg:gap-12">
-                        <Card class="h-full border-0 shadow-lg dark:bg-slate-800">
-                            <CardHeader>
-                                <div class="flex items-center space-x-3">
-                                    <div
-                                        class="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-100 dark:bg-emerald-800/30">
-                                        <Camera class="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
-                                    </div>
-                                    <CardTitle class="dark:text-slate-100">Photo Documentation</CardTitle>
+                    <div class="mx-auto grid max-w-5xl items-stretch gap-6 py-12 lg:grid-cols-2 lg:gap-8">
+                        <!-- Add card-specific animation here -->
+                        <Card
+                            class="h-full border bg-white/50 dark:bg-slate-800/50 shadow-md transition-all duration-300 hover:shadow-xl hover:border-emerald-300 dark:hover:border-emerald-700">
+                            <CardHeader class="flex flex-row items-center gap-4">
+                                <div
+                                    class="flex h-12 w-12 items-center justify-center rounded-lg bg-emerald-100 dark:bg-emerald-900/30 shrink-0">
+                                    <Camera class="h-6 w-6 text-emerald-600 dark:text-emerald-400" />
                                 </div>
+                                <CardTitle class="dark:text-slate-100 text-lg">Photo Documentation</CardTitle>
                             </CardHeader>
                             <CardContent>
                                 <p class="text-slate-600 dark:text-slate-400">
-                                    Capture high-quality photos with automatic metadata including timestamp, GPS
-                                    coordinates,
-                                    and device information
-                                    for comprehensive documentation.
+                                    Capture high-quality photos with automatic metadata for comprehensive documentation.
                                 </p>
                             </CardContent>
                         </Card>
-                        <Card class="h-full border-0 shadow-lg dark:bg-slate-800">
-                            <CardHeader>
-                                <div class="flex items-center space-x-3">
-                                    <div
-                                        class="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100 dark:bg-blue-800/30">
-                                        <MapPin class="h-5 w-5 text-blue-600 dark:text-blue-400" />
-                                    </div>
-                                    <CardTitle class="dark:text-slate-100">Precise Location Tracking</CardTitle>
+                        <Card
+                            class="h-full border bg-white/50 dark:bg-slate-800/50 shadow-md transition-all duration-300 hover:shadow-xl hover:border-blue-300 dark:hover:border-blue-700">
+                            <CardHeader class="flex flex-row items-center gap-4">
+                                <div
+                                    class="flex h-12 w-12 items-center justify-center rounded-lg bg-blue-100 dark:bg-blue-900/30 shrink-0">
+                                    <MapPin class="h-6 w-6 text-blue-600 dark:text-blue-400" />
                                 </div>
+                                <CardTitle class="dark:text-slate-100 text-lg">Precise Location Tracking</CardTitle>
                             </CardHeader>
                             <CardContent>
                                 <p class="text-slate-600 dark:text-slate-400">
-                                    Automatic GPS location capture ensures authorities can find and address reported
-                                    issues
-                                    quickly and efficiently.
+                                    Automatic GPS capture ensures authorities can find and address reported issues
+                                    quickly.
                                 </p>
                             </CardContent>
                         </Card>
-
-                        <Card class="h-full border-0 shadow-lg dark:bg-slate-800">
-                            <CardHeader>
-                                <div class="flex items-center space-x-3">
-                                    <div
-                                        class="flex h-10 w-10 items-center justify-center rounded-lg bg-green-100 dark:bg-green-800/30">
-                                        <Shield class="h-5 w-5 text-green-600 dark:text-green-400" />
-                                    </div>
-                                    <CardTitle class="dark:text-slate-100">Anonymous Reporting</CardTitle>
+                        <Card
+                            class="h-full border bg-white/50 dark:bg-slate-800/50 shadow-md transition-all duration-300 hover:shadow-xl hover:border-green-300 dark:hover:border-green-700">
+                            <CardHeader class="flex flex-row items-center gap-4">
+                                <div
+                                    class="flex h-12 w-12 items-center justify-center rounded-lg bg-green-100 dark:bg-green-900/30 shrink-0">
+                                    <Shield class="h-6 w-6 text-green-600 dark:text-green-400" />
                                 </div>
+                                <CardTitle class="dark:text-slate-100 text-lg">Anonymous Reporting</CardTitle>
                             </CardHeader>
                             <CardContent>
                                 <p class="text-slate-600 dark:text-slate-400">
-                                    Report issues anonymously if preferred, ensuring everyone feels safe to contribute
-                                    to
-                                    community safety and
-                                    infrastructure improvement.
+                                    Report issues anonymously, ensuring everyone feels safe to contribute to community
+                                    safety.
                                 </p>
                             </CardContent>
                         </Card>
-                        <Card class="h-full border-0 shadow-lg dark:bg-slate-800">
-                            <CardHeader>
-                                <div class="flex items-center space-x-3">
-                                    <div
-                                        class="flex h-10 w-10 items-center justify-center rounded-lg bg-orange-100 dark:bg-orange-800/30">
-                                        <Clock class="h-5 w-5 text-orange-600 dark:text-orange-400" />
-                                    </div>
-                                    <CardTitle class="dark:text-slate-100">Real-time Status Updates</CardTitle>
+                        <Card
+                            class="h-full border bg-white/50 dark:bg-slate-800/50 shadow-md transition-all duration-300 hover:shadow-xl hover:border-orange-300 dark:hover:border-orange-700">
+                            <CardHeader class="flex flex-row items-center gap-4">
+                                <div
+                                    class="flex h-12 w-12 items-center justify-center rounded-lg bg-orange-100 dark:bg-orange-900/30 shrink-0">
+                                    <Clock class="h-6 w-6 text-orange-600 dark:text-orange-400" />
                                 </div>
+                                <CardTitle class="dark:text-slate-100 text-lg">Real-time Status Updates</CardTitle>
                             </CardHeader>
                             <CardContent>
                                 <p class="text-slate-600 dark:text-slate-400">
                                     Track the progress of your reports from submission to completion, with notifications
                                     at each
-                                    stage of the repair
-                                    process.
-                                </p>
-                            </CardContent>
-                        </Card>
-                        <Card class="h-full border-0 shadow-lg dark:bg-slate-800">
-                            <CardHeader>
-                                <div class="flex items-center space-x-3">
-                                    <div
-                                        class="flex h-10 w-10 items-center justify-center rounded-lg bg-red-100 dark:bg-red-800/30">
-                                        <AlertTriangle class="h-5 w-5 text-red-600 dark:text-red-400" />
-                                    </div>
-                                    <CardTitle class="dark:text-slate-100">Priority Classification</CardTitle>
-                                </div>
-                            </CardHeader>
-                            <CardContent>
-                                <p class="text-slate-600 dark:text-slate-400">
-                                    Severity assessment helps authorities prioritize urgent safety issues while ensuring
-                                    all
-                                    reports receive
-                                    appropriate attention.
+                                    stage.
                                 </p>
                             </CardContent>
                         </Card>
@@ -369,13 +440,15 @@ defineProps<HomePageProps>();
                 </div>
             </section>
 
-            <section id="impact" class="w-full py-12 md:py-24 lg:py-32">
-                <div class="flex-1 px-4 md:px-6">
-                    <div class="grid items-center gap-6 lg:grid-cols-[1fr_400px] lg:gap-12 xl:grid-cols-[1fr_600px]">
+            <!-- IMPACT SECTION with Animated Counters -->
+            <section id="impact" ref="impactSection"
+                :class="['w-full py-12 md:py-24 lg:py-32 transition-all duration-1000', impactVisible ? 'opacity-100' : 'opacity-0']">
+                <div class=" px-4 md:px-6">
+                    <div class="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
                         <div class="flex flex-col justify-center space-y-4">
                             <div class="space-y-2">
                                 <Badge variant="secondary"
-                                    class="w-fit bg-emerald-100 text-emerald-800 dark:bg-emerald-800 dark:text-emerald-200">
+                                    class="w-fit bg-emerald-100 text-emerald-800 dark:bg-emerald-900/50 dark:text-emerald-300">
                                     Making a Difference
                                 </Badge>
                                 <h2
@@ -385,46 +458,42 @@ defineProps<HomePageProps>();
                                 <p
                                     class="max-w-[600px] text-slate-600 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed dark:text-slate-400">
                                     See how crowdsourced reporting is transforming infrastructure maintenance and
-                                    creating safer
-                                    communities
-                                    worldwide.
+                                    creating safer communities.
                                 </p>
                             </div>
-                            <div class="grid grid-cols-2 gap-4 py-4">
-                                <div class="space-y-2">
-                                    <div class="text-2xl font-bold text-emerald-600 dark:text-emerald-400">50%</div>
-                                    <p class="text-sm text-slate-600 dark:text-slate-400">Faster repair response times
+                            <div class="grid grid-cols-2 gap-6 py-4">
+                                <div ref="impactCounter1" class="space-y-1">
+                                    <div class="text-4xl font-bold text-emerald-600 dark:text-emerald-400">{{
+                                        animatedRepairTime }}%</div>
+                                    <p class="text-sm text-slate-600 dark:text-slate-400">Faster repair response
                                     </p>
                                 </div>
-                                <div class="space-y-2">
-                                    <div class="text-2xl font-bold text-emerald-600 dark:text-emerald-400">75%</div>
+                                <div ref="impactCounter2" class="space-y-1">
+                                    <div class="text-4xl font-bold text-emerald-600 dark:text-emerald-400">{{
+                                        animatedReportIncrease }}%</div>
                                     <p class="text-sm text-slate-600 dark:text-slate-400">Increase in reported issues
                                     </p>
                                 </div>
-                                <div class="space-y-2">
-                                    <div class="text-2xl font-bold text-emerald-600 dark:text-emerald-400">30%</div>
+                                <div ref="impactCounter3" class="space-y-1">
+                                    <div class="text-4xl font-bold text-emerald-600 dark:text-emerald-400">{{
+                                        animatedCostReduction }}%</div>
                                     <p class="text-sm text-slate-600 dark:text-slate-400">Reduction in maintenance costs
                                     </p>
                                 </div>
-                                <div class="space-y-2">
-                                    <div class="text-2xl font-bold text-emerald-600 dark:text-emerald-400">95%</div>
+                                <div ref="impactCounter4" class="space-y-1">
+                                    <div class="text-4xl font-bold text-emerald-600 dark:text-emerald-400">{{
+                                        animatedSatisfaction }}%</div>
                                     <p class="text-sm text-slate-600 dark:text-slate-400">User satisfaction rate</p>
                                 </div>
                             </div>
-                            <div class="flex flex-col gap-2 min-[400px]:flex-row">
-                                <Button class="bg-emerald-600 text-white hover:bg-emerald-700">Join the
-                                    Movement</Button>
-                                <Button variant="outline"
-                                    class="dark:border-slate-600 dark:text-slate-50 dark:hover:bg-slate-800">View Case
-                                    Studies</Button>
-                            </div>
                         </div>
                         <div class="flex items-center justify-center">
-                            <div class="relative">
-                                <img src="photo-3.webp" alt="Community impact visualization"
-                                    class="mx-auto h-[100%] w-[100%] overflow-hidden rounded-xl object-cover shadow-2xl" />
+                            <div class="relative group">
+                                <img src="/photo-3.webp" alt="Community impact visualization"
+                                    class="mx-auto h-full w-full overflow-hidden rounded-xl object-cover shadow-2xl" />
                                 <div
-                                    class="absolute inset-0 rounded-xl bg-gradient-to-t from-black/20 to-transparent dark:from-black/40" />
+                                    class="absolute -inset-4 bg-emerald-500/10 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10">
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -516,22 +585,19 @@ defineProps<HomePageProps>();
                             <p
                                 class="max-w-[900px] text-emerald-100 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed dark:text-emerald-200">
                                 Join thousands of citizens already making a difference. Start reporting infrastructure
-                                issues
-                                today and help build
-                                stronger, safer communities for everyone.
+                                issues today.
                             </p>
                         </div>
-                        <div class="flex flex-col gap-2 min-[400px]:flex-row">
-                            <Link size="lg" href="https://github.com/Almadih/infra-report-app/releases/latest"
-                                class=" shadow-xs py-2 h-10 rounded-md px-6 has-[>svg]:px-4 cursor-pointer bg-white text-emerald-600 hover:bg-slate-100 dark:bg-slate-50 dark:text-emerald-700 dark:hover:bg-slate-200">
-                            Download the App
-                            </Link>
-                            <Button size="lg"
-                                class="cursor-pointer bg-white text-emerald-600 hover:bg-slate-100 dark:bg-slate-50 dark:text-emerald-700 dark:hover:bg-slate-200">
-                                Learn More
+                        <div class="flex flex-col gap-2 min-[400px]:flex-row mt-4">
+                            <Button as-child size="lg"
+                                class="bg-white text-emerald-700 hover:bg-slate-100 dark:bg-slate-50 dark:text-emerald-700 dark:hover:bg-slate-200 transition-transform hover:scale-105 active:scale-95 shadow-lg">
+                                <a href="https://github.com/Almadih/infra-report-app/releases/latest"
+                                    target="_blank">Download
+                                    the App</a>
                             </Button>
                         </div>
-                        <p class="text-sm text-emerald-100 dark:text-emerald-200">Available on Android • Free to use •
+                        <p class="text-sm text-emerald-100 dark:text-emerald-200 pt-2">Available on Android • Free to
+                            use •
                             No
                             registration required</p>
                     </div>
@@ -540,8 +606,8 @@ defineProps<HomePageProps>();
         </main>
 
         <footer id="contact"
-            class="flex w-full shrink-0 flex-col items-center gap-2 border-t border-slate-200 bg-white px-4 py-6 sm:flex-row md:px-6 dark:border-slate-800 dark:bg-slate-900">
-            <div class="flex flex-1 flex-col items-center justify-between md:flex-row">
+            class="flex w-full shrink-0 flex-col items-center gap-2 border-t border-slate-200 bg-white px-4 py-6 sm:flex-row md:px-6 dark:border-slate-800 dark:bg-slate-950">
+            <div class="flex flex-1 flex-col items-center justify-between md:flex-row w-full">
                 <div class="flex items-center space-x-2">
                     <span class="font-bold text-slate-900 dark:text-slate-50">InfraReport</span>
                 </div>
@@ -556,10 +622,6 @@ defineProps<HomePageProps>();
                     <Link href="#"
                         class="text-xs text-slate-600 underline-offset-4 hover:underline dark:text-slate-400 dark:hover:text-slate-200">
                     Terms of Service
-                    </Link>
-                    <Link href="#"
-                        class="text-xs text-slate-600 underline-offset-4 hover:underline dark:text-slate-400 dark:hover:text-slate-200">
-                    Contact Us
                     </Link>
                 </nav>
             </div>
