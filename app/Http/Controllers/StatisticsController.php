@@ -116,8 +116,6 @@ class StatisticsController extends Controller
             'active_reporters' => User::query()->where('is_anonymous', true)->where('is_active', true)->where('created_at', '>=', $startDate)->where('created_at', '<=', $endDate)->count(),
         ];
 
-        dd($reportsVolumeBySeverity);
-
         return Inertia::render('Statistics/Index', [
             'reportsByStatus' => $reportsByStatus,
             'reportsBySeverity' => $reportsBySeverity,
