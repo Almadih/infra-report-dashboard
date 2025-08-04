@@ -7,6 +7,7 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ReportFlagController;
 use App\Http\Controllers\ReportsHeatmapController;
 use App\Http\Controllers\ReportsMapController;
+use App\Http\Controllers\StatisticsController;
 use App\Http\Controllers\StoreReportUpdateController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserReportsController;
@@ -28,6 +29,7 @@ Route::middleware(['auth', NotAnonUser::class])->group(function () {
     Route::resource('users', UserController::class)->only(['index', 'show']);
     Route::get('users/{user}/reports', UserReportsController::class)->name('users.reports');
     Route::put('users/{user}/status', ChangeUserStatusController::class)->name('users.status');
+    Route::get('/statistics', StatisticsController::class)->name('statistics.index');
 });
 
 Route::get('/image/{image}', ImageController::class)->middleware('auth:sanctum')->name('images.show');

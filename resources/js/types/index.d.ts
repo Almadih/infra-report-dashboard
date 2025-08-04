@@ -152,3 +152,46 @@ export type ReportFilters = {
 };
 
 export type BreadcrumbItemType = BreadcrumbItem;
+
+export type ReportsByStatus = {
+    name: string;
+    value: number;
+};
+
+export type ReportsBySeverity = {
+    name: string;
+    value: number;
+};
+
+export type UserWithReportsCount = User & { reports_count: number };
+
+export type ReportsVolume = {
+    day: string;
+    report_count: number;
+};
+
+export type Stats = {
+    total_reports: number;
+    open_reports: number;
+    active_reporters: number;
+};
+
+export type ReportsVolumeBySeverity = {
+    day: string;
+    severity_name: string;
+    report_count: number;
+    severity_id: number;
+};
+
+export type ChartData = {
+    labels: string[];
+    datasets: {
+        label: string;
+        data: number[];
+    }[];
+};
+
+export type ReportsByRegion = {
+    name: string;
+    count: number;
+};
